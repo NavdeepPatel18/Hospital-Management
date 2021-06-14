@@ -32,6 +32,10 @@ const doctorSchema = new Schema(
       type: Number,
       required: true,
     },
+    profilePhoto: {
+      type: String,
+      required: true,
+    },
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category",

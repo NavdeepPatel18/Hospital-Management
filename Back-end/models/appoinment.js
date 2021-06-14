@@ -7,17 +7,9 @@ const appoinmentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Doctor",
   },
-  staff: {
-    type: Schema.Types.ObjectId,
-    ref: "Staff",
-  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
-  },
-  covidBooking: {
-    type: Schema.Types.ObjectId,
-    ref: "Covidbooking",
   },
   problem: {
     type: String,
@@ -53,15 +45,12 @@ const appoinmentSchema = new Schema({
   },
   conformby: {
     type: String,
-    required: true,
   },
   status: {
     type: String,
-    required: true,
   },
   statusDate: {
     type: Date,
-    required: true,
   },
 });
 

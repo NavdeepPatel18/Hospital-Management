@@ -17,13 +17,12 @@ const advertismentSchema = new Schema({
   },
   status: {
     type: String,
-    required: true,
   },
-  dateIn: {
+  startDate: {
     type: Date,
     required: true,
   },
-  dateOut: {
+  endDate: {
     type: Date,
     required: true,
   },
