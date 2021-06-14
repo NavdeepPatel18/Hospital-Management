@@ -6,6 +6,8 @@ const isAuth = require("./middleware/is-auth");
 const graphQlschema = require("./graphql/schema/index");
 const graphQlresolvers = require("./graphql/resolvers/index");
 
+const port = process.env.PORT || 3000;
+
 const app = express();
 
 app.use(bodyParser.json());
@@ -27,7 +29,7 @@ mongoose
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
-    app.listen(3000);
+    app.listen(port);
   })
   .catch((err) => {
     throw err;
