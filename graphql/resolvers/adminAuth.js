@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const _ = require("lodash");
 const Admin = require("../../models/admin");
 const Category = require("../../models/category");
 
@@ -54,18 +55,25 @@ module.exports = {
     try {
       const hashedPassword = await bcrypt.hash(args.password, 12);
 
-      const adminchange = {
-        name: args.name,
-        password: hashedPassword,
-      };
+      console.log("hello " + typeof args.name + "\t\t " + typeof args.password);
+
+      const data = _.pick(args, _.identity);
+      const adminchange = {};
+
+      Object.keys(data).forEach((key) => {
+        if (data[key]) {
+          adminchange[key] = data[key];
+        }
+      });
 
       const result = await Admin.findOneAndUpdate(
         { _id: req.userId },
-        adminchange,
+        { adminchange },
         {
+          omitUndefined: false,
           new: true,
-          omitUndefined: true,
-          // returnOriginal: true,
+          multi: false,
+          runValidators: true,
         }
       );
 
