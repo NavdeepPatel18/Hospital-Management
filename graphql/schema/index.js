@@ -61,6 +61,8 @@ input DoctorInput {
 }
 input StaffInput{
   name: String!
+  email: String!
+  phone: Float!
   password: String
   designation: String!
 }

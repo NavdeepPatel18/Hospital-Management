@@ -8,6 +8,14 @@ const staffSchema = new Schema(
       type: String,
       required: true,
     },
+    email: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: Number,
+      required: true,
+    },
     designation: {
       type: String,
       required: true,

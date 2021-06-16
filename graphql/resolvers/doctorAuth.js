@@ -99,7 +99,7 @@ module.exports = {
   },
   createStaff: async (args) => {
     try {
-      const staffID = await Staff.findOne({ name: args.staffInput.name });
+      const staffID = await Staff.findOne({ email: args.staffInput.email });
 
       if (staffID) {
         throw new Error("Staff exists already.");
@@ -109,6 +109,8 @@ module.exports = {
 
       const staff = new Staff({
         name: args.staffInput.name,
+        email: args.staffInput.email,
+        phone: args.staffInput.phone,
         designation: args.staffInput.designation,
         password: hashedPassword,
         doctor: "60c037c382f1522eb0315f48",
