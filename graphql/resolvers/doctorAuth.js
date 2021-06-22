@@ -29,8 +29,8 @@ module.exports = {
 
       const doctor = new Doctor({
         name: args.doctorInput.name,
-        education: args.doctorInput.education,
-        experience: args.doctorInput.experience,
+        // education: args.doctorInput.education,
+        // experience: args.doctorInput.experience,
         city: args.doctorInput.city,
         email: args.doctorInput.email,
         phone: args.doctorInput.phone,

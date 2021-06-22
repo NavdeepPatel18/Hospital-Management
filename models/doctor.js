@@ -10,11 +10,9 @@ const doctorSchema = new Schema(
     },
     education: {
       type: String,
-      required: true,
     },
     experience: {
       type: Number,
-      required: true,
     },
     city: {
       type: String,
@@ -34,7 +32,6 @@ const doctorSchema = new Schema(
     },
     profilePhoto: {
       type: String,
-      required: true,
     },
     category: {
       type: Schema.Types.ObjectId,

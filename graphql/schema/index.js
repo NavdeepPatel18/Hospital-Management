@@ -52,8 +52,6 @@ type StaffAuthData{
 }
 input DoctorInput {
   name: String!
-  education: String!
-  experience: Int!
   city: String!
   email: String!
   password: String
