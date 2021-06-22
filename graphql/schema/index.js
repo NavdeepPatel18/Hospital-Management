@@ -27,7 +27,7 @@ type Doctor{
   email: String!
   password: String
   category: Category!
-  phone: Int!
+  phone: String!
   createdAt: String!
   updatedAt: String!
 }
@@ -55,7 +55,7 @@ input DoctorInput {
   city: String!
   email: String!
   password: String
-  phone: Float!
+  phone: String!
 }
 input StaffInput{
   name: String!
