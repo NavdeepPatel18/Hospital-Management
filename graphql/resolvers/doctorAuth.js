@@ -7,6 +7,7 @@ const Attendence = require("../../models/attendence");
 module.exports = {
   doctor: async (args, req) => {
     try {
+      const doctorID = await Doctor.findOne({ email: args.doctorInput.email });
       const doctors = await Doctor.find();
       return doctors.map((doctor) => {
         return {
@@ -14,6 +15,17 @@ module.exports = {
           _id: doctor.id,
         };
       });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  doctorProfile: async (args, req) => {
+    try {
+      const doctor = await Doctor.findById({ _id: req.userId });
+      return {
+        ...doctor._doc,
+        _id: doctor.id,     
+      };
     } catch (err) {
       console.log(err);
     }
@@ -84,7 +96,7 @@ module.exports = {
     }
 
     const token = jwt.sign(
-      { userId: doctor.id, email: doctor.email },
+      { userId: doctor.id, email: doctor.email, userType: "DOCTOR" },
       "superkey",
       {
         expiresIn: "1h",

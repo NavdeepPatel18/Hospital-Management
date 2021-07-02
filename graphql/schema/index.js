@@ -311,6 +311,7 @@ const schema = `
     adminlogin(username: String! , password: String! ): AdminAuthData!
     categorys: [Category!]!
     doctor: Doctor!
+    doctorProfile : Doctor!
     doctorlogin(username: String! , password: String! ): DoctorAuthData!
     stafflogin(username: String! , password: String! ): StaffAuthData!
     userlogin(username: String! , password: String! ): UserAuthData!
