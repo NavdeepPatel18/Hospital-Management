@@ -55,7 +55,6 @@ type Staff{
 type DoctorAuthData{
   userId: ID!
   token: String!
-  tokenExpiraction: Int!
 }
 type StaffAuthData{
   userId: ID!

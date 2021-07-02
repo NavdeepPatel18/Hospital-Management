@@ -97,21 +97,17 @@ module.exports = {
 
     const token = jwt.sign(
       { userId: doctor.id, email: doctor.email, userType: "DOCTOR" },
-      "superkey",
-      {
-        expiresIn: "1h",
-      }
+      "superkey"
     );
 
     return {
       userId: doctor.id,
       token: token,
-      tokenExpirtion: 1,
     };
   },
-  changedoctorPassword: async (args) => {
+  changedoctorPassword: async (args, req) => {
     try {
-      const doctorID = await Doctor.findOne({ _id: req.userId });
+      const doctorID = await Doctor.findById({ _id: req.userId });
 
       if (!doctorID) {
         throw new Error("Doctor not exists .");
@@ -122,13 +118,16 @@ module.exports = {
         throw new Error("currunt password is not correct");
       }
 
+      if (args.oldpassword === args.newpassword) {
+        throw new Error("Enter password is same as old password");
+      }
+
       const hashedPassword = await bcrypt.hash(args.newpassword, 12);
 
-      const doctor = new Doctor({
-        password: hashedPassword,
-      });
-
-      const result = await doctor.save();
+      const result = await Doctor.findOneAndUpdate(
+        { _id: req.userId },
+        { password: hashedPassword }
+      );
 
       return { ...result._doc, password: null, _id: result.id };
     } catch (err) {
