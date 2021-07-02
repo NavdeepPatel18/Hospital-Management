@@ -346,6 +346,7 @@ const schema = `
     createFacilities(facilitiesInput: FacilitiesInput): Facilities!
     createReview(reviewInput: ReviewInput): Review!
     createUser(userInput: UserInput): User!
+    changedoctorPassword(oldpassword: String! , newpassword: String!):DoctorProfile!
     updateAdmin(name: String , password: String): Admin!
   }
     

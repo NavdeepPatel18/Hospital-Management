@@ -24,7 +24,7 @@ module.exports = {
       const doctor = await Doctor.findById({ _id: req.userId });
       return {
         ...doctor._doc,
-        _id: doctor.id,     
+        _id: doctor.id,
       };
     } catch (err) {
       console.log(err);
@@ -108,6 +108,32 @@ module.exports = {
       token: token,
       tokenExpirtion: 1,
     };
+  },
+  changedoctorPassword: async (args) => {
+    try {
+      const doctorID = await Doctor.findOne({ _id: req.userId });
+
+      if (!doctorID) {
+        throw new Error("Doctor not exists .");
+      }
+
+      const isEqual = await bcrypt.compare(args.oldpassword, doctorID.password);
+      if (!isEqual) {
+        throw new Error("currunt password is not correct");
+      }
+
+      const hashedPassword = await bcrypt.hash(args.newpassword, 12);
+
+      const doctor = new Doctor({
+        password: hashedPassword,
+      });
+
+      const result = await doctor.save();
+
+      return { ...result._doc, password: null, _id: result.id };
+    } catch (err) {
+      throw err;
+    }
   },
   createStaff: async (args) => {
     try {
@@ -231,5 +257,4 @@ module.exports = {
       throw err;
     }
   },
-  
 };
