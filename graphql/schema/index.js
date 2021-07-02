@@ -31,6 +31,18 @@ type Doctor{
   createdAt: String!
   updatedAt: String!
 }
+type DoctorProfile{
+  _id: ID!
+  name: String!
+  education: String
+  experience: Int
+  city: String
+  email: String!
+  category: Category
+  phone: String!
+  createdAt: String!
+  updatedAt: String!
+}
 type Staff{
   _id: ID!
   name: String!
@@ -311,7 +323,8 @@ const schema = `
     adminlogin(username: String! , password: String! ): AdminAuthData!
     categorys: [Category!]!
     doctor: Doctor!
-    doctorProfile : Doctor!
+    doctorProfile : DoctorProfile!
+    hospitalDetail(userId: String!) : Hospital!
     doctorlogin(username: String! , password: String! ): DoctorAuthData!
     stafflogin(username: String! , password: String! ): StaffAuthData!
     userlogin(username: String! , password: String! ): UserAuthData!

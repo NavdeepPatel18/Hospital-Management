@@ -79,4 +79,15 @@ module.exports = {
       throw err;
     }
   },
+  hospitalDetail: async (args, req) => {
+    try {
+      const hospital = await Hospital.findOne({ doctor: args.userId });
+      return {
+        ...hospital._doc,
+        _id: hospital.id,
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
