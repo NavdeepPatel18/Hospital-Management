@@ -126,6 +126,9 @@ module.exports = {
       if (!staff && !doctor) {
         throw new Error("Email is incorrect!");
       } else if (doctor) {
+        if (!doctor.status == "approved") {
+          throw new Error("Admin not approved !!! Please contact to Admin!");
+        }
         const isEqual = await bcrypt.compare(password, doctor.password);
         if (!isEqual) {
           throw new Error("Password is incorrect!");
@@ -345,6 +348,34 @@ module.exports = {
       throw err;
     }
   },
+  deleteStaff: async (args, req) => {
+    if (!req.isAuth && req.userType === "DOCTOR") {
+      return res.json({ status: "error", error: "You not have access" });
+    }
+    try {
+      const staffID = await Staff.findOne({ email: args.staffInput.email });
+
+      if (staffID) {
+        throw new Error("Staff already exists .");
+      }
+      let createdpassword = Math.random().toString(36).slice(2);
+      const hashedPassword = await bcrypt.hash(createdpassword, 12);
+
+      const staff = new Staff({
+        name: args.staffInput.name,
+        email: args.staffInput.email,
+        phone: args.staffInput.phone,
+        designation: args.staffInput.designation,
+        password: hashedPassword,
+        doctor: req.userId,
+      });
+      const result = await staff.save();
+
+      return { ...result._doc, password: createdpassword, _id: result.id };
+    } catch (err) {
+      throw err;
+    }
+  },
   stafflogin: async ({ username, password }) => {
     console.log(username);
     console.log(password);
@@ -408,7 +439,7 @@ module.exports = {
     }
 
     try {
-      const staff = await Staff.findById({ _id: req.userId });
+      const staff = await Staff.findById({ _id: args.staffId });
       return {
         ...staff._doc,
         _id: staff.id,

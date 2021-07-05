@@ -319,7 +319,7 @@ const schema = `
     categorys: [Category!]!
     doctor: Doctor!
     doctorProfile : Doctor!
-    staffProfile : Staff!
+    staffProfile(staffId:String!) : Staff!
     staffs : [Staff!]!
     adminProfile : Admin!
     userProfile : User!
