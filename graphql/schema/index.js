@@ -320,6 +320,7 @@ const schema = `
     doctor: Doctor!
     doctorProfile : Doctor!
     staffProfile : Staff!
+    staffs : Staff!
     adminProfile : Admin!
     userProfile : User!
     hospitalDetail(userId: String!) : Hospital!

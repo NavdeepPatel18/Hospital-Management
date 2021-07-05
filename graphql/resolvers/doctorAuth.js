@@ -300,7 +300,7 @@ module.exports = {
       const staffID = await Staff.findOne({ email: args.staffInput.email });
 
       if (staffID) {
-        throw new Error("Staff exists already.");
+        throw new Error("Staff already exists .");
       }
       let createdpassword = Math.random().toString(36).slice(2);
       const hashedPassword = await bcrypt.hash(createdpassword, 12);
