@@ -369,13 +369,10 @@ module.exports = {
     };
   },
   staffs: async (args, req) => {
-    console.log(
-      "\n isAuth value \t" + req.isAuth + "\n usertype \t" + req.userType
-    );
     if (!req.isAuth) {
       throw new Error("You are not Authenticated!");
     }
-    if (req.userType === "Admin") {
+    if (req.userType === "STAFF") {
       throw new Error("You do not have permission!");
     }
     try {
