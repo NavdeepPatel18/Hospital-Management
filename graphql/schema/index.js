@@ -320,7 +320,7 @@ const schema = `
     doctor: Doctor!
     doctorProfile : Doctor!
     staffProfile(staffId:String!) : Staff!
-    staffs : [Staff!]!
+    staffs : [Staff!]
     adminProfile : Admin!
     userProfile : User!
     hospitalDetail(userId: String!) : Hospital!
