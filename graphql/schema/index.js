@@ -349,7 +349,7 @@ const schema = `
     
     changePassword(oldpassword: String! , newpassword: String!):Boolean!
     updateAdmin(name: String , password: String): Admin!
-    updateStaff(updateStaff: UpdateStaff):Staff!
+    updateDoctorStaff(updateStaff: UpdateStaff , staffId:String):Staff!
     deleteStaff(staffId: String):Boolean!
   }
     

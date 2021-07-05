@@ -324,7 +324,7 @@ module.exports = {
       throw err;
     }
   },
-  updateStaff: async (args, req) => {
+  updateDoctorStaff: async (args, req) => {
     if (
       !req.isAuth &&
       (req.userType === "STAFF" || req.userType === "DOCTOR")
@@ -334,7 +334,7 @@ module.exports = {
 
     try {
       const result = await Staff.findByIdAndUpdate(
-        { _id: [req.userId, args.staffId] },
+        { _id: args.staffId },
         {
           name: args.updateStaff.name,
           email: args.updateStaff.email,
