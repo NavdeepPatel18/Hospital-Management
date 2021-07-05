@@ -407,7 +407,7 @@ module.exports = {
     try {
       const staffs = await Staff.find({
         doctor: req.userId,
-        status: "working",
+        status: "Working",
       });
       return staffs.map((staff) => {
         return {
