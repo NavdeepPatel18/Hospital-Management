@@ -372,7 +372,7 @@ module.exports = {
     if (!req.isAuth) {
       throw new Error("You are not Authenticated!");
     }
-    if (req.userType === "STAFF") {
+    if (req.userType === "DOCTOR") {
       throw new Error("You do not have permission!");
     }
     try {
