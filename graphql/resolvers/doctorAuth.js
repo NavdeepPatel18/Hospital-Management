@@ -376,7 +376,7 @@ module.exports = {
       throw new Error("You do not have permission!");
     }
     try {
-      const staffs = await Staff.find({ doctor: args.doctor });
+      const staffs = await Staff.find({ doctor: req.userId });
       return staffs.map((staff) => {
         return {
           ...staff._doc,
