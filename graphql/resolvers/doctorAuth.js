@@ -369,7 +369,7 @@ module.exports = {
         }
       );
 
-      return { ...result._doc, _id: result.id };
+      return true;
     } catch (err) {
       throw err;
     }
