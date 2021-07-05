@@ -314,6 +314,7 @@ module.exports = {
         phone: args.staffInput.phone,
         designation: args.staffInput.designation,
         password: hashedPassword,
+        status: "Working",
         doctor: req.userId,
       });
       const result = await staff.save();
@@ -324,13 +325,16 @@ module.exports = {
     }
   },
   updateStaff: async (args, req) => {
-    if (!req.isAuth && req.userType === "STAFF") {
+    if (
+      !req.isAuth &&
+      (req.userType === "STAFF" || req.userType === "DOCTOR")
+    ) {
       return res.json({ status: "error", error: "You not have access" });
     }
 
     try {
       const result = await Staff.findByIdAndUpdate(
-        { _id: req.userId },
+        { _id: [req.userId, args.staffId] },
         {
           name: args.updateStaff.name,
           email: args.updateStaff.email,
@@ -352,26 +356,20 @@ module.exports = {
     if (!req.isAuth && req.userType === "DOCTOR") {
       return res.json({ status: "error", error: "You not have access" });
     }
+
     try {
-      const staffID = await Staff.findOne({ email: args.staffInput.email });
+      const result = await Staff.findByIdAndUpdate(
+        { _id: args.staffId },
+        {
+          status: "deleted",
+        },
+        {
+          omitUndefined: true,
+          new: true,
+        }
+      );
 
-      if (staffID) {
-        throw new Error("Staff already exists .");
-      }
-      let createdpassword = Math.random().toString(36).slice(2);
-      const hashedPassword = await bcrypt.hash(createdpassword, 12);
-
-      const staff = new Staff({
-        name: args.staffInput.name,
-        email: args.staffInput.email,
-        phone: args.staffInput.phone,
-        designation: args.staffInput.designation,
-        password: hashedPassword,
-        doctor: req.userId,
-      });
-      const result = await staff.save();
-
-      return { ...result._doc, password: createdpassword, _id: result.id };
+      return { ...result._doc, _id: result.id };
     } catch (err) {
       throw err;
     }
@@ -407,7 +405,10 @@ module.exports = {
       throw new Error("You do not have permission!");
     }
     try {
-      const staffs = await Staff.find({ doctor: req.userId });
+      const staffs = await Staff.find([
+        { doctor: req.userId },
+        { status: "Working" },
+      ]);
       return staffs.map((staff) => {
         return {
           ...staff._doc,
@@ -439,7 +440,7 @@ module.exports = {
     }
 
     try {
-      const staff = await Staff.findById({ _id: args.staffId });
+      const staff = await Staff.findById({ _id: [args.staffId, req.userId] });
       return {
         ...staff._doc,
         _id: staff.id,

@@ -20,6 +20,10 @@ const staffSchema = new Schema(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+      required: true,
+    },
     doctor: {
       type: Schema.Types.ObjectId,
       ref: "Doctor",
