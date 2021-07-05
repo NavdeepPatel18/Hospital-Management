@@ -440,7 +440,9 @@ module.exports = {
     }
 
     try {
-      const staff = await Staff.findById({ _id: [args.staffId, req.userId] });
+      const staff = await Staff.findOne({
+        $or: [{ _id: args.staffId }, { doctor: req.userId }],
+      });
       return {
         ...staff._doc,
         _id: staff.id,
