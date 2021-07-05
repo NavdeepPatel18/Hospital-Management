@@ -1,6 +1,13 @@
 const { buildSchema } = require("graphql");
+const { Upload } = require("graphql-upload");
 
 const adminType = `
+scalar Upload
+
+type File {
+  url: String!
+}
+
 type Admin{
   _id:ID!
   name: String!
@@ -14,38 +21,28 @@ type Category{
 type AdminAuthData{
   userId: ID!
   token: String!
-  tokenExpiraction: Int!
 }
 `;
 const doctorType = `
 type Doctor{
   _id: ID!
   name: String!
-  education: String!
-  experience: Int!
-  city: String!
-  email: String!
-  password: String
-  category: Category!
-  phone: String!
-  createdAt: String!
-  updatedAt: String!
-}
-type DoctorProfile{
-  _id: ID!
-  name: String!
   education: String
   experience: Int
   city: String
   email: String!
+  password: String
   category: Category
   phone: String!
   createdAt: String!
   updatedAt: String!
 }
+
 type Staff{
   _id: ID!
   name: String!
+  email: String!
+  phone: String!
   password: String
   doctor: Doctor!
   designation: String!
@@ -59,7 +56,6 @@ type DoctorAuthData{
 type StaffAuthData{
   userId: ID!
   token: String!
-  tokenExpiraction: Int!
 }
 input DoctorInput {
   name: String!
@@ -71,20 +67,24 @@ input DoctorInput {
 input StaffInput{
   name: String!
   email: String!
-  phone: Float!
+  phone: String!
   designation: String!
+}
+
+input UpdateStaff{
+  name: String
+  email: String
+  phone: String
+  designation: String
 }
 
 `;
 const hospitalType = `
 type Hospital{
   _id: ID!
-  doctor: Doctor!
   name: String!
-  city: String!
   email: String!
-  number1: Int!
-  number2: Int!
+  number: String!
   location: String
   address: String!
 }
@@ -102,13 +102,10 @@ type Facilities{
 }
 input HospitalInput {
   name: String!
-  city: String!
   email: String!
-  number1: Int!
-  number2: Int!
+  number: String!
   location: String
   address: String!
-  doctor: String!
 }
 
 input HospitalPhotoInput {
@@ -231,20 +228,19 @@ const userType = `
 type User{
   _id: ID!
   name: String!
-  city: String!
-  address: String!
+  city: String
+  address: String
   email: String!
   password: String
-  age: Int!
-  gender: String!
-  phone: Float!
+  age: Int
+  gender: String
+  phone: String!
   createdAt: String!
   updatedAt: String!
 }
 type UserAuthData{
   userId: ID!
   token: String!
-  tokenExpiraction: Int!
 }
 input UserInput{
   name: String!
@@ -254,7 +250,7 @@ input UserInput{
   password: String
   age: Int!
   gender: String!
-  phone: Float!
+  phone: String!
 }
 `;
 const appoinmentType = `
@@ -322,7 +318,10 @@ const schema = `
     adminlogin(username: String! , password: String! ): AdminAuthData!
     categorys: [Category!]!
     doctor: Doctor!
-    doctorProfile : DoctorProfile!
+    doctorProfile : Doctor!
+    staffProfile : Staff!
+    adminProfile : Admin!
+    userProfile : User!
     hospitalDetail(userId: String!) : Hospital!
     doctorlogin(username: String! , password: String! ): DoctorAuthData!
     stafflogin(username: String! , password: String! ): StaffAuthData!
@@ -331,6 +330,7 @@ const schema = `
   }
     
   type RootMutation {
+    uploadImage(file: Upload!): File!
     createCategory(name: String!): Category!
     createAdvertisment(advertismentInput: AdvertismentInput): Advertisment!
     createAdvertismentPhoto(advertismentPhotoInput: AdvertismentPhotoInput): AdvertismentPhoto!
@@ -345,8 +345,10 @@ const schema = `
     createFacilities(facilitiesInput: FacilitiesInput): Facilities!
     createReview(reviewInput: ReviewInput): Review!
     createUser(userInput: UserInput): User!
-    changedoctorPassword(oldpassword: String! , newpassword: String!):DoctorProfile!
+    
+    changePassword(oldpassword: String! , newpassword: String!):Boolean!
     updateAdmin(name: String , password: String): Admin!
+    updateStaff(updateStaff: UpdateStaff):Staff!
   }
     
   schema {

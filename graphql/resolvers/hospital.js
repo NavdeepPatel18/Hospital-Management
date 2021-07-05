@@ -1,8 +1,40 @@
 const Hospital = require("../../models/hospital");
 const HospitalPhoto = require("../../models/hospitalphoto");
 const Facilities = require("../../models/facilities");
+const { processRequest } = require("graphql-upload");
+const path = require("path");
+const fs = require("fs");
+
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 module.exports = {
+  uploadImage: async ({ file }) => {
+    console.log(file.file);
+    const { createReadStream, filename } = await file.file;
+    console.log("\nPrint data", createReadStream, "\n\n", filename);
+
+    const { ext } = path.parse(filename);
+
+    const randomName = makeid(12) + ext;
+
+    const stream = createReadStream();
+    const pathName = path.join(__dirname, `/public/images/${randomName}`);
+
+    await stream.pipe(fs.createWriteStream(pathName));
+
+    return {
+      url: `http://localhost:3000/images/${randomName}`,
+    };
+  },
   createHospital: async (args) => {
     try {
       const doctoreId = await Hospital.findOne({

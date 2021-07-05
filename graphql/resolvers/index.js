@@ -6,8 +6,10 @@ const appoinmentResolvers = require("./appoinment");
 const reviewResolvers = require("./review");
 const advertismentResolvers = require("./advertisment");
 const covidResolvers = require("./covid");
+const { GraphQLUpload } = require("graphql-upload");
 
 const rootResolvers = {
+  Upload: GraphQLUpload,
   ...doctorauthResolvers,
   ...adminauthResolvers,
   ...hospitalResolvers,

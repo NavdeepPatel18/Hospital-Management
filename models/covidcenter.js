@@ -11,12 +11,20 @@ const covidcenterSchema = new Schema({
     type: Number,
     required: true,
   },
+  vacantbed: {
+    type: Number,
+    required: true,
+  },
+  icubed: {
+    type: Number,
+    required: true,
+  },
   oxygen: {
-    type: Boolean,
+    type: Number,
     required: true,
   },
   ventilator: {
-    type: Boolean,
+    type: Number,
     required: true,
   },
 });

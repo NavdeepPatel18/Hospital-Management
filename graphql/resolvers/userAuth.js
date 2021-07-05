@@ -56,4 +56,19 @@ module.exports = {
       tokenExpirtion: 1,
     };
   },
+  userProfile: async (args, req) => {
+    if (!req.isAuth) {
+      return res.json({ status: "error", error: "You not have access" });
+    }
+
+    try {
+      const user = await User.findById({ _id: req.userId });
+      return {
+        ...user._doc,
+        _id: user.id,
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };

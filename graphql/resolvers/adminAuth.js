@@ -27,16 +27,13 @@ module.exports = {
       tokenExpirtion: 1,
     };
   },
-  singleAdmin: async (args, req) => {
+  adminProfile: async (args, req) => {
     if (!req.isAuth) {
-      throw new Error("You are not Authenticated!");
+      return res.json({ status: "error", error: "You not have access" });
     }
-    if (req.userType !== "Admin") {
-      throw new Error("You do not have permission!");
-    }
-    try {
-      const admin = await Admin.find({ _id: req.userId });
 
+    try {
+      const admin = await Admin.findById({ _id: req.userId });
       return {
         ...admin._doc,
         _id: admin.id,

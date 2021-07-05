@@ -12,19 +12,11 @@ const hospitalSchema = new Schema(
       type: String,
       required: true,
     },
-    city: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
       required: true,
     },
-    number1: {
-      type: Number,
-      required: true,
-    },
-    number2: {
+    number: {
       type: Number,
       required: true,
     },
@@ -33,6 +25,10 @@ const hospitalSchema = new Schema(
       required: true,
     },
     address: {
+      type: String,
+      required: true,
+    },
+    covidCenter: {
       type: String,
       required: true,
     },
@@ -45,6 +41,10 @@ const hospitalSchema = new Schema(
     facilities: {
       type: Schema.Types.ObjectId,
       ref: "Facilities",
+    },
+    covidcenter: {
+      type: Schema.Types.ObjectId,
+      ref: "Covidcenter",
     },
   },
   { timestamp: true }
