@@ -26,6 +26,18 @@ input DoctorInput {
   phone: String!
 }
 
+input UpdateDoctor {
+  ame: String!
+  education: String
+  experience: Int
+  city: String
+  email: String
+  password: String
+  category: Category
+  phone: String
+}
+
+
 `;
 
 exports.doctorType = doctorType;

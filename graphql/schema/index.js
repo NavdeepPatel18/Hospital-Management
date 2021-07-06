@@ -25,15 +25,20 @@ const schema = `
   ${reviewType}
 
   type RootQuery {
-    adminlogin(username: String! , password: String! ): AdminAuthData!
+    adminProfile : Admin!
+    
     categorys: [Category!]!
     doctor: Doctor!
     doctorProfile : Doctor!
-    staffProfile(staffId:String) : Staff
-    staffs : [Staff!]
-    adminProfile : Admin!
-    userProfile : User!
+    
     hospitalDetail(userId: String!) : Hospital!
+    
+    staffProfile(staffId:String) : Staff!
+    staffs : [Staff!]
+    
+    userProfile : User!
+    
+    adminlogin(username: String! , password: String! ): AdminAuthData!
     doctorlogin(username: String! , password: String! ): DoctorAuthData!
     stafflogin(username: String! , password: String! ): StaffAuthData!
     userlogin(username: String! , password: String! ): UserAuthData!
@@ -42,25 +47,32 @@ const schema = `
     
   type RootMutation {
     uploadImage(file: Upload!): File!
+    updateAdmin(name: String , password: String): Admin!
     createCategory(name: String!): Category!
     createAdvertisment(advertismentInput: AdvertismentInput): Advertisment!
     createAdvertismentPhoto(advertismentPhotoInput: AdvertismentPhotoInput): AdvertismentPhoto!
-    createAppoinment(appoinmentInput: AppoinmentInput): Appoinment!
-    attendence(attendenceInput: AttendenceInput): Attendence!
-    createCovidCenter(covidCenterInput: CovidCenterInput): CovidCenter!
-    createCovidBooking(covidBookingInput: CovidBookingInput): CovidBooking!
+    changePassword(oldpassword: String! , newpassword: String!):Boolean!
+    
     createDoctor(doctorInput: DoctorInput): Doctor!
     createStaff(staffInput: StaffInput): Staff!
+    updateDoctor(updateDoctor: UpdateDoctor):Doctor!
+    updateDoctorStaff(updateStaff: UpdateStaff , staffId:String):Staff!
+    updateSlot(slot:[String]! , day: String!):Slot!
+    deleteStaff(staffId: String):Boolean!
+    
+    attendence(status:String!): Attendence!
+    
+    createCovidCenter(covidCenterInput: CovidCenterInput): CovidCenter!
+    createCovidBooking(covidBookingInput: CovidBookingInput): CovidBooking!
+    
     createHospital(hospitalInput: HospitalInput): Hospital!
     createHospitalPhoto(hospitalPhotoInput: HospitalPhotoInput): HospitalPhoto!
     createFacilities(facilitiesInput: FacilitiesInput): Facilities!
+    
+    createAppoinment(appoinmentInput: AppoinmentInput): Appoinment!
     createReview(reviewInput: ReviewInput): Review!
     createUser(userInput: UserInput): User!
     
-    changePassword(oldpassword: String! , newpassword: String!):Boolean!
-    updateAdmin(name: String , password: String): Admin!
-    updateDoctorStaff(updateStaff: UpdateStaff , staffId:String):Staff!
-    deleteStaff(staffId: String):Boolean!
   }
     
   schema {

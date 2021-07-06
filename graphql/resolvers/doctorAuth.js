@@ -9,6 +9,8 @@ const Staff = require("../../models/staff");
 const User = require("../../models/user");
 const Admin = require("../../models/admin");
 const Attendence = require("../../models/attendence");
+const Avability = require("../../models/avability");
+const { dateToString } = require("../../helpers/date");
 
 module.exports = {
   doctor: async (args, req) => {
@@ -25,6 +27,61 @@ module.exports = {
       console.log(err);
     }
   },
+  staffs: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error("You are not Authenticated!");
+    }
+    if (!req.userType === "DOCTOR") {
+      throw new Error("You do not have permission!");
+    }
+    try {
+      const staffs = await Staff.find({
+        doctor: req.userId,
+        status: "Working",
+      });
+      return staffs.map((staff) => {
+        return {
+          ...staff._doc,
+          _id: staff.id,
+        };
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  doctorProfile: async (args, req) => {
+    if (!req.isAuth) {
+      return res.json({ status: "error", error: "You not have access" });
+    }
+
+    try {
+      const doctor = await Doctor.findById({ _id: req.userId });
+      return {
+        ...doctor._doc,
+        _id: doctor.id,
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  staffProfile: async (args, req) => {
+    if (!req.isAuth) {
+      return res.json({ status: "error", error: "You not have access" });
+    }
+
+    try {
+      const staff = await Staff.findOne({
+        $or: [{ _id: args.staffId }, { _id: req.userId }],
+      });
+      return {
+        ...staff._doc,
+        _id: staff.id,
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
   createDoctor: async (args) => {
     try {
       const doctorID = await Doctor.findOne({ email: args.doctorInput.email });
@@ -48,50 +105,78 @@ module.exports = {
       });
 
       const doctorResult = await doctor.save();
+      if (doctorResult) {
+        const hospital = new Hospital({
+          name: dumyData,
+          doctor: doctorResult.id,
+          email: dumyData,
+          number: 0,
+          address: dumyData,
+          location: dumyData,
+          covidCenter: "No",
+        });
+        const hospitalResult = await hospital.save();
+        if (hospitalResult) {
+          const hospitalphoto = new HospitalPhoto({
+            name: dumyData,
+            photo: 0,
+            hospital: hospitalResult.id,
+          });
 
-      const hospital = new Hospital({
-        name: dumyData,
-        doctor: doctorResult.id,
-        email: dumyData,
-        number: 0,
-        address: dumyData,
-        location: dumyData,
-        covidCenter: "No",
-      });
-      const hospitalResult = await hospital.save();
+          await hospitalphoto.save();
 
-      const hospitalphoto = new HospitalPhoto({
-        name: dumyData,
-        photo: 0,
-        hospital: hospitalResult.id,
-      });
+          const facilities = new Facilities({
+            name: dumyData,
+            hospital: hospitalResult.id,
+          });
 
-      const hospitalphotoResult = await hospitalphoto.save();
+          await facilities.save();
 
-      const facilities = new Facilities({
-        name: dumyData,
-        hospital: hospitalResult.id,
-      });
+          const covidCenter = new CovidCenter({
+            hospital: hospitalResult.id,
+            totalbed: 0,
+            oxygen: 0,
+            ventilator: 0,
+            vacantbed: 0,
+            icubed: 0,
+          });
 
-      const facilitiesResult = await facilities.save();
+          await covidCenter.save();
+        }
 
-      const covidCenter = new CovidCenter({
-        hospital: hospitalResult.id,
-        totalbed: 0,
-        oxygen: 0,
-        ventilator: 0,
-        vacantbed: 0,
-        icubed: 0,
-      });
+        const dayList = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
 
-      const covidCenterresult = await covidCenter.save();
+        const avability = [];
+        dayList.map((dayName) => {
+          avability.push({
+            doctor: doctorResult.id,
+            slot: [dumyData],
+            day: dayName,
+          });
+        });
+        await Avability.insertMany(avability);
+      }
 
-      return { ...doctorResult._doc, password: null, _id: doctorResult.id };
+      return {
+        ...doctorResult._doc,
+        password: null,
+        _id: doctorResult.id,
+        createdAt: dateToString(doctorResult._doc.createdAt),
+        updatedAt: dateToString(doctorResult._doc.updatedAt),
+      };
     } catch (err) {
       throw err;
     }
   },
-  updatedoctor: async (args) => {
+  updatedoctor: async (args, req) => {
     if (!req.isAuth && req.userType === "DOCTOR") {
       return res.json({ status: "error", error: "You not have access" });
     }
@@ -119,6 +204,36 @@ module.exports = {
       throw err;
     }
   },
+  updateslot: async (args, req) => {
+    if (!req.isAuth && req.userType === "DOCTOR") {
+      return res.json({ status: "error", error: "You not have access" });
+    }
+
+    try {
+      const find = await Avability.findOne({
+        doctor: req.userId,
+        day: args.day,
+      });
+      if (!find) {
+        throw new Error("Slot not avalable.");
+      }
+      const result = await Avability.findByIdAndUpdate(
+        { _id: find.id },
+        {
+          slot: args.slot,
+        },
+        {
+          omitUndefined: true,
+          new: true,
+        }
+      );
+
+      return { ...result._doc, _id: result.id };
+    } catch (err) {
+      throw err;
+    }
+  },
+
   createStaff: async (args, req) => {
     if (!req.isAuth && req.userType === "DOCTOR") {
       return res.json({ status: "error", error: "You not have access" });
@@ -168,60 +283,6 @@ module.exports = {
       return true;
     } catch (err) {
       throw err;
-    }
-  },
-  staffs: async (args, req) => {
-    if (!req.isAuth) {
-      throw new Error("You are not Authenticated!");
-    }
-    if (!req.userType === "DOCTOR") {
-      throw new Error("You do not have permission!");
-    }
-    try {
-      const staffs = await Staff.find({
-        doctor: req.userId,
-        status: "Working",
-      });
-      return staffs.map((staff) => {
-        return {
-          ...staff._doc,
-          _id: staff.id,
-        };
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  },
-  doctorProfile: async (args, req) => {
-    if (!req.isAuth) {
-      return res.json({ status: "error", error: "You not have access" });
-    }
-
-    try {
-      const doctor = await Doctor.findById({ _id: req.userId });
-      return {
-        ...doctor._doc,
-        _id: doctor.id,
-      };
-    } catch (err) {
-      console.log(err);
-    }
-  },
-  staffProfile: async (args, req) => {
-    if (!req.isAuth) {
-      return res.json({ status: "error", error: "You not have access" });
-    }
-
-    try {
-      const staff = await Staff.findOne({
-        $or: [{ _id: args.staffId }, { doctor: req.userId }],
-      });
-      return {
-        ...staff._doc,
-        _id: staff.id,
-      };
-    } catch (err) {
-      console.log(err);
     }
   },
 };
