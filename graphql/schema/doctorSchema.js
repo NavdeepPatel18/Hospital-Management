@@ -33,7 +33,7 @@ input UpdateDoctor {
   city: String
   email: String
   password: String
-  category: Category
+  category: String
   phone: String
 }
 
