@@ -1,4 +1,5 @@
 const doctorauthResolvers = require("./doctorAuth");
+const doctor_staffResolvers = require("./doctor_staff");
 const userauthResolvers = require("./userAuth");
 const adminauthResolvers = require("./adminAuth");
 const hospitalResolvers = require("./hospital");
@@ -11,6 +12,7 @@ const { GraphQLUpload } = require("graphql-upload");
 const rootResolvers = {
   Upload: GraphQLUpload,
   ...doctorauthResolvers,
+  ...doctor_staffResolvers,
   ...adminauthResolvers,
   ...hospitalResolvers,
   ...userauthResolvers,
