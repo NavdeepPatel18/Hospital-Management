@@ -28,12 +28,16 @@ module.exports = {
 
         const token = jwt.sign(
           { userId: doctor.id, email: doctor.email, userType: "DOCTOR" },
-          "superkey"
+          "superkey",
+          {
+            expiresIn: "1d",
+          }
         );
 
         return {
           userId: doctor.id,
           token: token,
+          userType: "DOCTOR",
         };
       } else if (staff) {
         if (staff.status !== "Working") {
@@ -46,12 +50,16 @@ module.exports = {
 
         const token = jwt.sign(
           { userId: staff.id, email: staff.email, userType: "STAFF" },
-          "superkey"
+          "superkey",
+          {
+            expiresIn: "1d",
+          }
         );
 
         return {
           userId: staff.id,
           token: token,
+          userType: "STAFF",
         };
       } else {
         throw new Error("Some thing went wrong");
@@ -89,6 +97,12 @@ module.exports = {
     }
   },
   attendence: async (args) => {
+    if (
+      !req.isAuth &&
+      (req.userType === "STAFF" || req.userType === "DOCTOR")
+    ) {
+      return res.json({ status: "error", error: "You not have access" });
+    }
     try {
       // const attendenceID = await Attendence.findOne({ name: args.staffInput.name });
 

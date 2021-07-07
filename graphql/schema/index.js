@@ -40,7 +40,6 @@ const schema = `
     
     adminlogin(username: String! , password: String! ): AdminAuthData!
     doctorlogin(username: String! , password: String! ): DoctorAuthData!
-    stafflogin(username: String! , password: String! ): StaffAuthData!
     userlogin(username: String! , password: String! ): UserAuthData!
 
   }
@@ -59,15 +58,15 @@ const schema = `
     updateDoctorStaff(updateStaff: UpdateStaff , staffId:String):Staff!
     updateSlot(slot:[String]! , day: String!):Slot!
     deleteStaff(staffId: String):Boolean!
-    
+
+    updateHospital(updateHospital: HospitalInput):Hospital!
+    updateCovidCenter(updateCovidCenter: CovidCenterInput):CovidCenter!
+    updateCovidStatus(status: String!):Boolean!
+
     attendence(status:String!): Attendence!
     
-    createCovidCenter(covidCenterInput: CovidCenterInput): CovidCenter!
     createCovidBooking(covidBookingInput: CovidBookingInput): CovidBooking!
     
-    createHospital(hospitalInput: HospitalInput): Hospital!
-    createHospitalPhoto(hospitalPhotoInput: HospitalPhotoInput): HospitalPhoto!
-    createFacilities(facilitiesInput: FacilitiesInput): Facilities!
     
     createAppoinment(appoinmentInput: AppoinmentInput): Appoinment!
     createReview(reviewInput: ReviewInput): Review!

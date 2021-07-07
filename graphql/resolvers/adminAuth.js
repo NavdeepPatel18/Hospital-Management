@@ -15,21 +15,24 @@ module.exports = {
       throw new Error("Password is incorrect!");
     }
     const token = jwt.sign(
-      { userId: admin.id, userType: "Admin" },
+      { userId: admin.id, userType: "ADMIN" },
       "superkey",
       {
-        expiresIn: "1h",
+        expiresIn: "1d",
       }
     );
     return {
       userId: admin.id,
       token: token,
-      tokenExpirtion: 1,
+      userType: "ADMIN"
     };
   },
   adminProfile: async (args, req) => {
     if (!req.isAuth) {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error("You are not Authenticated!");
+    }
+    if (req.userType !== "ADMIN") {
+      throw new Error("You do not have permission!");
     }
 
     try {
@@ -46,7 +49,7 @@ module.exports = {
     if (!req.isAuth) {
       throw new Error("You are not Authenticated!");
     }
-    if (req.userType !== "Admin") {
+    if (req.userType !== "ADMIN") {
       throw new Error("You do not have permission!");
     }
     try {
@@ -96,7 +99,7 @@ module.exports = {
     if (!req.isAuth) {
       throw new Error("You are not Authenticated!");
     }
-    if (req.userType !== "Admin") {
+    if (req.userType !== "ADMIN") {
       throw new Error("You do not have permission!");
     }
     try {
@@ -118,16 +121,7 @@ module.exports = {
       throw err;
     }
   },
-  categorys: async (args, req) => {
-    console.log(
-      "\n isAuth value \t" + req.isAuth + "\n usertype \t" + req.userType
-    );
-    if (!req.isAuth) {
-      throw new Error("You are not Authenticated!");
-    }
-    if (req.userType !== "Admin") {
-      throw new Error("You do not have permission!");
-    }
+  categorys: async () => {
     try {
       const categorys = await Category.find();
       return categorys.map((category) => {

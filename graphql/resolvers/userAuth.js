@@ -42,22 +42,21 @@ module.exports = {
       throw new Error("Password is incorrect!");
     }
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      "superkey",
-      {
-        expiresIn: "1h",
-      }
-    );
+    const token = jwt.sign({ userId: user.id, email: user.email }, "superkey", {
+      expiresIn: "1d",
+    });
 
     return {
       userId: user.id,
       token: token,
-      tokenExpirtion: 1,
+      userType: "USER",
     };
   },
   userProfile: async (args, req) => {
     if (!req.isAuth) {
+      return res.json({ status: "error", error: "You not have access" });
+    }
+    if (req.userType !== "USER") {
       return res.json({ status: "error", error: "You not have access" });
     }
 

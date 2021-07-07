@@ -3,6 +3,9 @@ const Doctor = require("../../models/doctor");
 
 module.exports = {
   createReview: async (args) => {
+    if (!req.isAuth && req.userType === "USER") {
+      return res.json({ status: "error", error: "You not have access" });
+    }
     try {
       const doctorId = await Doctor.findOne({
         _id: args.reviewInput.doctor,

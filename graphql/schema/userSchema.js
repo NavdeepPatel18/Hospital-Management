@@ -15,6 +15,7 @@ type User{
 type UserAuthData{
   userId: ID!
   token: String!
+  userType: String!
 }
 input UserInput{
   name: String!

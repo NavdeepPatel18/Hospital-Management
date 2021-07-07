@@ -15,9 +15,11 @@ type Category{
   _id: ID!
   name: String!
 }
+
 type AdminAuthData{
   userId: ID!
   token: String!
+  userType: String!
 }
 `;
 

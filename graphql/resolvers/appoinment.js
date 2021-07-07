@@ -2,6 +2,12 @@ const Appoinment = require("../../models/appoinment");
 
 module.exports = {
   createAppoinment: async (args) => {
+    if (!req.isAuth) {
+      throw new Error("You are not Authenticated!");
+    }
+    if (req.userType !== "USER") {
+      throw new Error("You do not have permission!");
+    }
     try {
       //   const appoinmentId = await Appoinment.findOne({
       //     doctor: args.appoinmentInput.doctor,

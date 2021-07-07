@@ -16,6 +16,7 @@ type Doctor{
 type DoctorAuthData{
   userId: ID!
   token: String!
+  userType: String!
 }
 
 input DoctorInput {

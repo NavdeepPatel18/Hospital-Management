@@ -6,7 +6,7 @@ module.exports = {
     if (!req.isAuth) {
       throw new Error("You are not Authenticated!");
     }
-    if (req.userType === "User") {
+    if (req.userType === "USER") {
       throw new Error("You do not have permission!");
     }
     try {
@@ -38,7 +38,7 @@ module.exports = {
     if (!req.isAuth) {
       throw new Error("You are not Authenticated!");
     }
-    if (req.userType === "User" || req.userType === "Staff") {
+    if (req.userType === "USER") {
       throw new Error("You do not have permission!");
     }
     try {

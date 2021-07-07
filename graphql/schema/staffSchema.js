@@ -16,6 +16,7 @@ type Staff{
 type StaffAuthData{
   userId: ID!
   token: String!
+  userType: String!
 }
 
 input StaffInput{

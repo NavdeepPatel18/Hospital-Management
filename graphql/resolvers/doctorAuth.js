@@ -31,7 +31,7 @@ module.exports = {
     if (!req.isAuth) {
       throw new Error("You are not Authenticated!");
     }
-    if (!req.userType === "DOCTOR") {
+    if (req.userType !== "DOCTOR") {
       throw new Error("You do not have permission!");
     }
     try {
@@ -51,7 +51,10 @@ module.exports = {
   },
   doctorProfile: async (args, req) => {
     if (!req.isAuth) {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error("You are not Authenticated!");
+    }
+    if (req.userType !== "DOCTOR") {
+      throw new Error("You do not have permission!");
     }
 
     try {
@@ -65,7 +68,10 @@ module.exports = {
     }
   },
   staffProfile: async (args, req) => {
-    if (!req.isAuth) {
+    if (
+      !req.isAuth &&
+      (req.userType === "STAFF" || req.userType === "DOCTOR")
+    ) {
       return res.json({ status: "error", error: "You not have access" });
     }
 
