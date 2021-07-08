@@ -2,7 +2,7 @@ const Review = require("../../models/review");
 const Doctor = require("../../models/doctor");
 
 module.exports = {
-  createReview: async (args) => {
+  createReview: async (args, req) => {
     if (!req.isAuth && req.userType === "USER") {
       return res.json({ status: "error", error: "You not have access" });
     }
@@ -30,4 +30,9 @@ module.exports = {
       throw err;
     }
   },
+  // ViewReview: async (args, req) => {
+  //   if (!req.isAuth && req.userType === "USER") {
+  //     return res.json({ status: "error", error: "You not have access" });
+  //   }
+  // },
 };

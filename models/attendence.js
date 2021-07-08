@@ -7,10 +7,12 @@ const attendenceSchema = new Schema(
     doctor: {
       type: Schema.Types.ObjectId,
       ref: "Doctor",
+      required: false,
     },
     staff: {
       type: Schema.Types.ObjectId,
       ref: "Staff",
+      required: false,
     },
     status: {
       type: String,

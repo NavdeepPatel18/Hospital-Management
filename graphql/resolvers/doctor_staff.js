@@ -103,32 +103,54 @@ module.exports = {
     ) {
       return res.json({ status: "error", error: "You not have access" });
     }
-    try {
-      // const attendenceID = await Attendence.findOne({ name: args.staffInput.name });
 
-      // if (attendenceID) {
-      //   throw new Error("Staff exists already.");
-      // }
+    if (req.userType === "DOCTOR") {
+      try {
+        await Doctor.findByIdAndUpdate(
+          { _id: req.userId },
+          {
+            inoutstatus: args.status,
+          },
+          {
+            omitUndefined: true,
+            new: true,
+          }
+        );
 
-      const doctorID = await Staff.findOne({
-        _id: args.attendenceInput.staff,
-      });
+        const addAttendence = new Attendence({
+          doctor: req.userId,
+          status: args.status,
+        });
+        const result = await addAttendence.save();
 
-      if (!doctorID) {
-        throw new Error("You do not have permission.");
+        return { ...result._doc, _id: result.id };
+      } catch (err) {
+        throw err;
       }
+    } else {
+      try {
+        const doctor = await Staff.findById({ _id: req.userId });
+        await Doctor.findByIdAndUpdate(
+          { _id: doctor.doctor },
+          {
+            inoutstatus: args.status,
+          },
+          {
+            omitUndefined: true,
+            new: true,
+          }
+        );
 
-      const addattendence = new Attendence({
-        staff: args.attendenceInput.staff,
-        timeIn: args.attendenceInput.timeIn,
-        timeOut: args.attendenceInput.timeOut,
-        doctor: doctorID._doc.doctor,
-      });
-      const result = await addattendence.save();
+        const addAttendence = new Attendence({
+          staff: req.userId,
+          status: args.status,
+        });
+        const result = await addAttendence.save();
 
-      return { ...result._doc, _id: result.id };
-    } catch (err) {
-      throw err;
+        return { ...result._doc, _id: result.id };
+      } catch (err) {
+        throw err;
+      }
     }
   },
 };

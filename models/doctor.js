@@ -45,6 +45,11 @@ const doctorSchema = new Schema(
       type: String,
       required: true,
     },
+    inoutStatus: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   { timestamps: true }
 );
