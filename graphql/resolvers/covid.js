@@ -8,7 +8,7 @@ module.exports = {
       return res.json({ status: "error", error: "You not have access" });
     }
 
-    if (req.userType !== "DOCTOR" || req.userType !== "STAFF") {
+    if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
       throw new Error("You do not have permission!");
     }
 
@@ -75,7 +75,7 @@ module.exports = {
       return res.json({ status: "error", error: "You not have access" });
     }
 
-    if (req.userType !== "DOCTOR" || req.userType !== "STAFF") {
+    if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
       throw new Error("You do not have permission!");
     }
 
