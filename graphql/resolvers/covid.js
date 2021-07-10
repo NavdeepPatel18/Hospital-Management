@@ -5,7 +5,7 @@ const CovidBooking = require("../../models/covidbooking");
 module.exports = {
   updateCovidCenter: async (args, req) => {
     if (!req.isAuth) {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
 
     if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
@@ -72,7 +72,7 @@ module.exports = {
 
   updateCovidStatus: async (args, req) => {
     if (!req.isAuth) {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
 
     if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {

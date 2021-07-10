@@ -72,7 +72,7 @@ module.exports = {
       !req.isAuth &&
       (req.userType === "STAFF" || req.userType === "DOCTOR")
     ) {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
 
     try {
@@ -116,7 +116,7 @@ module.exports = {
           name: dumyData,
           doctor: doctorResult.id,
           email: dumyData,
-          number: 0,
+          number: dumyData,
           address: dumyData,
           location: dumyData,
           covidCenter: "No",
@@ -184,7 +184,7 @@ module.exports = {
   },
   updatedoctor: async (args, req) => {
     if (!req.isAuth && req.userType === "DOCTOR") {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
 
     try {
@@ -212,7 +212,7 @@ module.exports = {
   },
   updateslot: async (args, req) => {
     if (!req.isAuth && req.userType === "DOCTOR") {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
 
     try {
@@ -242,7 +242,7 @@ module.exports = {
 
   createStaff: async (args, req) => {
     if (!req.isAuth && req.userType === "DOCTOR") {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
     try {
       const staffID = await Staff.findOne({ email: args.staffInput.email });
@@ -271,7 +271,7 @@ module.exports = {
   },
   deleteStaff: async (args, req) => {
     if (!req.isAuth && req.userType === "DOCTOR") {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
 
     try {

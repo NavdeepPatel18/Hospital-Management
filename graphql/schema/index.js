@@ -67,8 +67,8 @@ const schema = `
     
     createCovidBooking(covidBookingInput: CovidBookingInput): CovidBooking!
     
+    createAppoinment(appoinmentInput: AppoinmentInput): Boolean!
     
-    createAppoinment(appoinmentInput: AppoinmentInput): Appoinment!
     createReview(reviewInput: ReviewInput): Review!
     createUser(userInput: UserInput): User!
     

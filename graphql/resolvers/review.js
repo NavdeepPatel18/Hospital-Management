@@ -4,7 +4,7 @@ const Doctor = require("../../models/doctor");
 module.exports = {
   createReview: async (args, req) => {
     if (!req.isAuth && req.userType === "USER") {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
     try {
       const doctorId = await Doctor.findOne({
@@ -32,7 +32,7 @@ module.exports = {
   },
   // ViewReview: async (args, req) => {
   //   if (!req.isAuth && req.userType === "USER") {
-  //     return res.json({ status: "error", error: "You not have access" });
+  //     throw new Error({ status: "error", error: "You not have access" });
   //   }
   // },
 };

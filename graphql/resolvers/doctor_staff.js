@@ -73,7 +73,7 @@ module.exports = {
       !req.isAuth &&
       (req.userType === "STAFF" || req.userType === "DOCTOR")
     ) {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
 
     try {
@@ -101,7 +101,7 @@ module.exports = {
       !req.isAuth &&
       (req.userType === "STAFF" || req.userType === "DOCTOR")
     ) {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
 
     if (req.userType === "DOCTOR") {
@@ -151,6 +151,104 @@ module.exports = {
       } catch (err) {
         throw err;
       }
+    }
+  },
+  appoinmentAccept: async (args, req) => {
+    if (!req.isAuth && req.userType !== "STAFF" && req.userType !== "DOCTOR") {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+    try {
+      await Appoinment.findByIdAndUpdate(
+        { _id: args.appoinmentId },
+        { appoinmentstatus: args.status },
+        {
+          omitUndefined: true,
+          new: true,
+        }
+      );
+      return true;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Something went wrong , Please try again later!");
+    }
+  },
+  appoinmentVisit: async (args, req) => {
+    if (!req.isAuth && req.userType !== "STAFF" && req.userType !== "DOCTOR") {
+      throw new Error("You not have access");
+    }
+    try {
+      await Appoinment.findByIdAndUpdate(
+        { _id: args.appoinmentId },
+        { status: args.status },
+        {
+          omitUndefined: true,
+          new: true,
+        }
+      );
+      return true;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Something went wrong , Please try again later!");
+    }
+  },
+  doctorAppoinment: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error("You are not Authenticated!");
+    }
+    if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
+      throw new Error("You do not have permission!");
+    }
+
+    try {
+      const doctorId = req.userId;
+      if (req.userType === "STAFF") {
+        const findStaff = await Staff.findOne({ _id: req.userId });
+        doctoreId = findStaff.doctor;
+      }
+      const historys = await Appoinment.find({
+        doctor: doctorId,
+        status: "Accept",
+      });
+      return historys.map((history) => {
+        return {
+          ...history._doc,
+          _id: history.id,
+          createdAt: dateToString(history._doc.createdAt),
+          updatedAt: dateToString(history._doc.updatedAt),
+        };
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  appoinmentHistory: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error("You are not Authenticated!");
+    }
+    if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
+      throw new Error("You do not have permission!");
+    }
+
+    try {
+      const doctorId = req.userId;
+      if (req.userType === "STAFF") {
+        const findStaff = await Staff.findOne({ _id: req.userId });
+        doctoreId = findStaff.doctor;
+      }
+      const historys = await Appoinment.find({
+        doctor: doctorId,
+        status: "Visited",
+      });
+      return historys.map((history) => {
+        return {
+          ...history._doc,
+          _id: history.id,
+          createdAt: dateToString(history._doc.createdAt),
+          updatedAt: dateToString(history._doc.updatedAt),
+        };
+      });
+    } catch (err) {
+      console.log(err);
     }
   },
 };

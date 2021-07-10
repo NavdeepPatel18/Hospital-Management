@@ -1,20 +1,25 @@
 const appoinmentType = `
 type Appoinment{
   _id: ID!
-  doctor: Doctor
+  doctor: Doctor!
+  staff:Staff
   user: User!
-  problem: String
+  token:Float!
+  problem: String!
   bp: Float
   caseType: String!
   suger: Float
   allergy: String
   history: String
   date: String!
-  time: String!
-  tocken: Int!
-  conformby: String
+  slot: String!
+  acceptedby: String
+  appoinmentstatus:String
   status: String
+  userstatus:String
   statusDate: String
+  createdAt: String!
+  updatedAt: String!
 }
 
 input AppoinmentInput{
@@ -26,9 +31,9 @@ input AppoinmentInput{
   allergy: String
   history: String
   date: String!
-  time: String!
-  tocken: Int!
+  slot: String!
 }
+
 `;
 
 exports.appoinmentType = appoinmentType;

@@ -51,7 +51,7 @@ module.exports = {
 
   updateHospital: async (args, req) => {
     if (!req.isAuth) {
-      return res.json({ status: "error", error: "You not have access" });
+      throw new Error({ status: "error", error: "You not have access" });
     }
 
     if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
