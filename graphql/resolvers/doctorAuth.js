@@ -106,7 +106,7 @@ module.exports = {
         email: args.doctorInput.email,
         phone: args.doctorInput.phone,
         password: hashedPassword,
-        category: "60bf5090666fb420d479b253",
+        category: args.doctorInput.category,
         status: "pendding",
       });
 

@@ -25,6 +25,7 @@ input DoctorInput {
   email: String!
   password: String
   phone: String!
+  category:String!
 }
 
 input UpdateDoctor {

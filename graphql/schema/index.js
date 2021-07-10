@@ -30,6 +30,8 @@ const schema = `
     categorys: [Category!]!
     doctor: Doctor!
     doctorProfile : Doctor!
+    myAppoinment :Appoinment!
+
     
     hospitalDetail(userId: String!) : Hospital!
     
@@ -37,6 +39,7 @@ const schema = `
     staffs : [Staff!]
     
     userProfile : User!
+    myAppoinment :Appoinment!
     
     adminlogin(username: String! , password: String! ): AdminAuthData!
     doctorlogin(username: String! , password: String! ): DoctorAuthData!
@@ -68,9 +71,14 @@ const schema = `
     createCovidBooking(covidBookingInput: CovidBookingInput): CovidBooking!
     
     createAppoinment(appoinmentInput: AppoinmentInput): Boolean!
-    
+    cancleAppoinment(appoinmentId:String!,status:String!):Boolean!
+    appoinmentAccept(appoinmentId:String!,status:String!):Boolean!
+    appoinmentVisit(appoinmentId:String!,status:String!):Boolean!
+    doctorAppoinment(appoinmentId:String!,status:String!):Boolean!
+
     createReview(reviewInput: ReviewInput): Review!
     createUser(userInput: UserInput): User!
+    
     
   }
     
