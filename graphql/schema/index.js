@@ -30,7 +30,8 @@ const schema = `
     categorys: [Category!]!
     doctor: Doctor!
     doctorProfile : Doctor!
-    myAppoinment :Appoinment!
+    doctorAppoinment:Appoinment!
+    appoinmentHistory :Appoinment!
 
     
     hospitalDetail(userId: String!) : Hospital!
