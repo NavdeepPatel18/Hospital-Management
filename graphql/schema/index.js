@@ -36,12 +36,14 @@ const schema = `
     doctor: Doctor!
     doctorProfile : Doctor!
     slot(day:String!): Slot!
+    attendenceLog:[Attendence!]
     
-    doctorAppoinment:Appoinment!
-    appoinmentHistory :Appoinment!
+    newAppoinment:[Appoinment!]
+    doctorAppoinment:[Appoinment!]
+    appoinmentHistory :[Appoinment!]
 
-    doctorCovidAppoinment:CovidAppoinment!
-    covidAppoinmentHistory :CovidAppoinment!
+    doctorCovidAppoinment:[CovidAppoinment!]
+    covidAppoinmentHistory :[CovidAppoinment!]
 
     review: [Review!]!
     helpAndSupport: [HelpSupport!]!
@@ -55,8 +57,8 @@ const schema = `
     staffs : [Staff!]
     
     userProfile : User!
-    myAppoinment :Appoinment!
-    myCovidAppoinment :CovidAppoinment!
+    myAppoinment :[Appoinment!]
+    myCovidAppoinment :[CovidAppoinment!]
     
     adminlogin(username: String! , password: String! ): AdminAuthData!
     doctorlogin(username: String! , password: String! ): DoctorAuthData!

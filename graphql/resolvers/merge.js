@@ -36,30 +36,19 @@ const doctor = async (staffId) => {
   }
 };
 
+const user = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    return { ...user._doc, _id: user.id, password: null };
+  } catch (err) {
+    throw err;
+  }
+};
+
 const hospital = async (hospitalId) => {
   try {
     const hospital = await Hospital.findById(hospitalId);
     return { ...hospital._doc, _id: hospital.id };
-  } catch (err) {
-    throw err;
-  }
-};
-
-const hospitalphoto = async (hospitalId) => {
-  try {
-    const hospitalPhotos = await HospitalPhoto.findById(hospitalId);
-    return hospitalPhotos.map((hospitalPhoto) => {
-      return { ...hospitalPhoto._doc, _id: hospitalPhoto.id };
-    });
-  } catch (err) {
-    throw err;
-  }
-};
-
-const faclities = async (hospitalId) => {
-  try {
-    const facilities = await Faclities.findById(hospitalId);
-    return { ...facilities._doc, _id: facilities.id };
   } catch (err) {
     throw err;
   }
@@ -77,6 +66,7 @@ const staff = async (doctorId) => {
 };
 
 exports.doctor = doctor;
+exports.user = user;
 exports.category = category;
 exports.admin = admin;
 exports.hospital = hospital;

@@ -9,6 +9,7 @@ type Doctor{
   password: String
   category: Category
   phone: String!
+  inoutStatus:Boolean!
   createdAt: String!
   updatedAt: String!
 }

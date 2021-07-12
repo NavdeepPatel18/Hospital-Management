@@ -14,7 +14,15 @@ const CovidAppoinment = require("../../models/covidappoinment");
 const Feedback = require("../../models/feedback");
 const HelpSupport = require("../../models/help_support");
 
-const {doctor} = require("./merge");
+const { dateToString } = require("../../helpers/date");
+
+const { doctor, user } = require("./merge");
+
+var start = new Date();
+start.setHours(0, 0, 0, 0);
+
+var end = new Date();
+end.setHours(23, 59, 59, 999);
 
 module.exports = {
   doctorlogin: async ({ username, password }) => {
@@ -168,7 +176,88 @@ module.exports = {
       }
     }
   },
+  attendenceLog: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
 
+    if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
+      throw new Error("You do not have permission!");
+    }
+
+    if (req.userType === "DOCTOR") {
+      try {
+        const results = await Attendence.find({
+          createdAt: { $gte: start, $lt: end },
+          doctor: req.userId,
+        });
+        console.log(results);
+        return results.map((result) => {
+          return {
+            ...result._doc,
+            _id: result.id,
+            createdAt: dateToString(result._doc.createdAt),
+            updatedAt: dateToString(result._doc.updatedAt),
+          };
+        });
+      } catch (err) {
+        throw err;
+      }
+    } else {
+      try {
+        const doctor = await Staff.findById({ _id: req.userId });
+        const results = await Attendence.find({
+          createdAt: { $gte: start, $lt: end },
+          doctor: doctor.doctor,
+        });
+        console.log(results);
+        return results.map((result) => {
+          return {
+            ...result._doc,
+            _id: result.id,
+            createdAt: dateToString(result._doc.createdAt),
+            updatedAt: dateToString(result._doc.updatedAt),
+          };
+        });
+      } catch (err) {
+        throw err;
+      }
+    }
+  },
+
+  newAppoinment: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+
+    if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
+      throw new Error("You do not have permission!");
+    }
+
+    try {
+      const doctorId = req.userId;
+      if (req.userType === "STAFF") {
+        const findStaff = await Staff.findOne({ _id: req.userId });
+        doctoreId = findStaff.doctor;
+      }
+      const historys = await Appoinment.find({
+        doctor: doctorId,
+        appoinmentstatus: "Pendding",
+      });
+      return historys.map((history) => {
+        return {
+          ...history._doc,
+          _id: history.id,
+          doctor: doctor.bind(this, history.doctor),
+          user: user.bind(this, history.user),
+          createdAt: dateToString(history._doc.createdAt),
+          updatedAt: dateToString(history._doc.updatedAt),
+        };
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
   appoinmentAccept: async (args, req) => {
     if (!req.isAuth) {
       throw new Error({ status: "error", error: "You not have access" });
@@ -187,14 +276,12 @@ module.exports = {
         data.appoinmentstatus = args.status;
         data.acceptedby = req.userType;
       }
-      await Appoinment.findByIdAndUpdate(
-        { _id: args.appoinmentId },
-        { data },
-        {
-          omitUndefined: true,
-          new: true,
-        }
-      );
+
+      console.log(data);
+      await Appoinment.findByIdAndUpdate({ _id: args.appoinmentId }, data, {
+        omitUndefined: true,
+        new: true,
+      });
       return true;
     } catch (err) {
       console.log(err);
@@ -218,13 +305,14 @@ module.exports = {
       }
       const historys = await Appoinment.find({
         doctor: doctorId,
-        status: "Accept",
+        appoinmentstatus: "Accept",
       });
       return historys.map((history) => {
         return {
           ...history._doc,
           _id: history.id,
           doctor: doctor.bind(this, history.doctor),
+          user: user.bind(this, history.user),
           createdAt: dateToString(history._doc.createdAt),
           updatedAt: dateToString(history._doc.updatedAt),
         };
@@ -280,7 +368,7 @@ module.exports = {
               { status: { $ne: "Pendding" } },
             ],
           },
-          { $or: { appoinmentstatus: "Reject" } },
+          { appoinmentstatus: "Reject" },
         ],
       });
       return historys.map((history) => {
@@ -288,6 +376,7 @@ module.exports = {
           ...history._doc,
           _id: history.id,
           doctor: doctor.bind(this, history.doctor),
+          user: user.bind(this, history.user),
           createdAt: dateToString(history._doc.createdAt),
           updatedAt: dateToString(history._doc.updatedAt),
         };

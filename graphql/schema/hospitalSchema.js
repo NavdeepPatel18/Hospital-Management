@@ -1,6 +1,7 @@
 const hospitalType = `
 type Hospital{
   _id: ID!
+  doctor:Doctor!
   name: String!
   email: String!
   number: String!

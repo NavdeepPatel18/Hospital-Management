@@ -4,6 +4,8 @@ const Facilities = require("../../models/facilities");
 const Staff = require("../../models/staff");
 const Doctor = require("../../models/doctor");
 
+const { doctor } = require("./merge");
+
 const { processRequest } = require("graphql-upload");
 const path = require("path");
 const fs = require("fs");
@@ -57,6 +59,7 @@ module.exports = {
       return {
         ...hospital._doc,
         _id: hospital.id,
+        doctor: doctor.bind(this, hospital.doctor),
       };
     } catch (err) {
       console.log(err);

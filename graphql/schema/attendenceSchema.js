@@ -4,6 +4,8 @@ type Attendence{
   doctor: Doctor
   staff: Staff
   status: String!
+  createdAt: String!
+  updatedAt: String!
 }
 
 type Slot{
