@@ -29,7 +29,7 @@ input DoctorInput {
 }
 
 input UpdateDoctor {
-  ame: String!
+  name: String!
   education: String
   experience: Int
   city: String
