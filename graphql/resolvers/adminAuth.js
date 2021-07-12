@@ -6,6 +6,8 @@ const Category = require("../../models/category");
 const Feedback = require("../../models/feedback");
 const HelpSupport = require("../../models/help_support");
 
+const { admin } = require("./merge");
+
 module.exports = {
   adminlogin: async ({ username, password }) => {
     const admin = await Admin.findOne({ name: username });
@@ -145,13 +147,17 @@ module.exports = {
     try {
       const help = new HelpSupport({
         admin: req.userId,
-        user: args.userType,
+        user: args.user,
         question: args.question,
         answer: args.answer,
       });
       const result = await help.save();
 
-      return { ...result._doc, _id: result.id };
+      return {
+        ...result._doc,
+        _id: result.id,
+        admin: admin.bind(this, result._doc.admin),
+      };
     } catch (err) {
       throw err;
     }
@@ -175,7 +181,11 @@ module.exports = {
         }
       );
 
-      return { ...result._doc, _id: result.id };
+      return {
+        ...result._doc,
+        _id: result.id,
+        admin: admin.bind(this, result._doc.admin),
+      };
     } catch (err) {
       throw err;
     }

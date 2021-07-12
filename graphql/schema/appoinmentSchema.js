@@ -4,6 +4,11 @@ type Appoinment{
   doctor: Doctor!
   staff:Staff
   user: User!
+  name:String!
+  age:Int
+  gender:String
+  phone:String!
+  address:String
   token:Float!
   problem: String!
   bp: Float
@@ -24,6 +29,11 @@ type Appoinment{
 
 input AppoinmentInput{
   doctor: String!
+  name:String!
+  age:Int
+  gender:String
+  phone:String!
+  address:String
   problem: String
   bp: Float
   caseType: String!

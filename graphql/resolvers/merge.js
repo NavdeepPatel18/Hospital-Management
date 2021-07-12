@@ -1,29 +1,18 @@
 const Doctor = require("../../models/doctor");
 const Category = require("../../models/category");
 const Hospital = require("../../models/hospital");
-const HospitalPhoto = require("../../models/hospitalphoto");
-const Facilities = require("../../models/facilities");
 const CovidCenter = require("../../models/covidcenter");
 const Staff = require("../../models/staff");
 const User = require("../../models/user");
 const Admin = require("../../models/admin");
 
-const admin = async (staffId) => {
+const admin = async (adminId) => {
   try {
-    const admin = await Admin.findById(staffId);
+    const admin = await Admin.findById(adminId);
     if (!admin) {
       throw new Error("User not exist!");
     }
     return { ...admin._doc, _id: admin.id, password: null };
-  } catch (err) {
-    throw err;
-  }
-};
-
-const hospitalPhoto = async (hospitalPhotoId) => {
-  try {
-    const hospitalPhoto = await Category.findById(hospitalPhotoId);
-    return { ...hospitalPhoto._doc, _id: hospitalPhoto.id };
   } catch (err) {
     throw err;
   }
@@ -89,4 +78,5 @@ const staff = async (doctorId) => {
 
 exports.doctor = doctor;
 exports.category = category;
-exports.staff = staff;
+exports.admin = admin;
+exports.hospital = hospital;

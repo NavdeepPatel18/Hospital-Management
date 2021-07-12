@@ -1,6 +1,7 @@
 const covidType = `
 type CovidCenter{
   _id: ID!
+  hospital:Hospital
   totalbed: Int!
   oxygen: Int!
   ventilator: Int! 
@@ -30,6 +31,7 @@ type CovidAppoinment{
   userstatus: String!
   statusDate: String
 }
+
 input CovidCenterInput{
   totalbed: Int!
   oxygen: Int!

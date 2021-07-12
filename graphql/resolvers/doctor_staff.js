@@ -14,7 +14,7 @@ const CovidAppoinment = require("../../models/covidappoinment");
 const Feedback = require("../../models/feedback");
 const HelpSupport = require("../../models/help_support");
 
-const doctor = require("./merge");
+const {doctor} = require("./merge");
 
 module.exports = {
   doctorlogin: async ({ username, password }) => {
@@ -105,7 +105,7 @@ module.exports = {
     }
   },
 
-  attendence: async (args) => {
+  attendence: async (args, req) => {
     if (!req.isAuth) {
       throw new Error({ status: "error", error: "You not have access" });
     }
@@ -114,12 +114,17 @@ module.exports = {
       throw new Error("You do not have permission!");
     }
 
+    var status = true;
+    if (args.status === "Out") {
+      status = false;
+    }
+
     if (req.userType === "DOCTOR") {
       try {
         await Doctor.findByIdAndUpdate(
           { _id: req.userId },
           {
-            inoutstatus: args.status,
+            inoutStatus: status,
           },
           {
             omitUndefined: true,
@@ -143,7 +148,7 @@ module.exports = {
         await Doctor.findByIdAndUpdate(
           { _id: doctor.doctor },
           {
-            inoutstatus: args.status,
+            inoutstatus: status,
           },
           {
             omitUndefined: true,

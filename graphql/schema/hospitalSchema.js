@@ -6,6 +6,7 @@ type Hospital{
   number: String!
   location: String
   address: String!
+  covidCenter: String!
 }
 type HospitalPhoto{
   _id: ID!

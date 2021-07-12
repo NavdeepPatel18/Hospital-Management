@@ -13,6 +13,8 @@ const Avability = require("../../models/avability");
 const { dateToString } = require("../../helpers/date");
 
 const { category } = require("./merge");
+const CurrentDate = new Date();
+const CurrentDateISO = CurrentDate.toISOString();
 
 module.exports = {
   doctor: async (args, req) => {
@@ -111,8 +113,8 @@ module.exports = {
         password: hashedPassword,
         category: args.doctorInput.category,
         status: "pendding",
-        createdAt: new Date().toISOString,
-        updatedAt: new Date().toISOString,
+        createdAt: CurrentDateISO,
+        updatedAt: CurrentDateISO,
       });
 
       const doctorResult = await doctor.save();
@@ -220,7 +222,24 @@ module.exports = {
       throw err;
     }
   },
-  updateslot: async (args, req) => {
+
+  slot: async (args, req) => {
+    if (!req.isAuth && req.userType === "DOCTOR") {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+
+    try {
+      const find = await Avability.findOne({
+        doctor: req.userId,
+        day: args.day,
+      });
+
+      return { ...find._doc, _id: find.id };
+    } catch (err) {
+      throw err;
+    }
+  },
+  updateSlot: async (args, req) => {
     if (!req.isAuth && req.userType === "DOCTOR") {
       throw new Error({ status: "error", error: "You not have access" });
     }
