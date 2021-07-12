@@ -34,7 +34,6 @@ input UpdateDoctor {
   experience: Int
   city: String
   email: String
-  password: String
   category: String
   phone: String
 }

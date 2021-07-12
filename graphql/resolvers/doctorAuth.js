@@ -187,7 +187,7 @@ module.exports = {
       throw err;
     }
   },
-  updatedoctor: async (args, req) => {
+  updateDoctor: async (args, req) => {
     if (!req.isAuth && req.userType === "DOCTOR") {
       throw new Error({ status: "error", error: "You not have access" });
     }
@@ -214,7 +214,7 @@ module.exports = {
         ...result._doc,
         password: null,
         _id: result.id,
-        category: category.bind(this, doctor._doc.category)
+        category: category.bind(this, result._doc.category),
       };
     } catch (err) {
       throw err;
