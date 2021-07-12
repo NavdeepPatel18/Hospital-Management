@@ -12,6 +12,8 @@ const Attendence = require("../../models/attendence");
 const Avability = require("../../models/avability");
 const { dateToString } = require("../../helpers/date");
 
+const { category } = require("./merge");
+
 module.exports = {
   doctor: async (args, req) => {
     try {
@@ -62,6 +64,7 @@ module.exports = {
       return {
         ...doctor._doc,
         _id: doctor.id,
+        category: category.bind(this, doctor._doc.category),
       };
     } catch (err) {
       console.log(err);
@@ -193,13 +196,13 @@ module.exports = {
       const result = await Doctor.findByIdAndUpdate(
         { _id: req.userId },
         {
-          name: args.doctorUpdate.name,
-          education: args.doctorUpdate.education,
-          experience: args.doctorUpdate.experience,
-          city: args.doctorUpdate.city,
-          email: args.doctorUpdate.email,
-          phone: args.doctorUpdate.phone,
-          category: args.doctorUpdate.category,
+          name: args.updateDoctorInput.name,
+          education: args.updateDoctorInput.education,
+          experience: args.updateDoctorInput.experience,
+          city: args.updateDoctorInput.city,
+          email: args.updateDoctorInput.email,
+          phone: args.updateDoctorInput.phone,
+          category: args.updateDoctorInput.category,
         },
         {
           omitUndefined: true,
@@ -207,7 +210,12 @@ module.exports = {
         }
       );
 
-      return { ...result._doc, password: null, _id: result.id };
+      return {
+        ...result._doc,
+        password: null,
+        _id: result.id,
+        category: category.bind(this, doctor._doc.category)
+      };
     } catch (err) {
       throw err;
     }

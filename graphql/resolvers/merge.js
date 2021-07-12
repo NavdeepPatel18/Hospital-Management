@@ -1,4 +1,5 @@
 const Doctor = require("../../models/doctor");
+const Category = require("../../models/category");
 const Hospital = require("../../models/hospital");
 const HospitalPhoto = require("../../models/hospitalphoto");
 const Facilities = require("../../models/facilities");
@@ -23,6 +24,15 @@ const hospitalPhoto = async (hospitalPhotoId) => {
   try {
     const hospitalPhoto = await Category.findById(hospitalPhotoId);
     return { ...hospitalPhoto._doc, _id: hospitalPhoto.id };
+  } catch (err) {
+    throw err;
+  }
+};
+
+const category = async (categoryId) => {
+  try {
+    const category = await Category.findById(categoryId);
+    return { ...category._doc, _id: category.id };
   } catch (err) {
     throw err;
   }
@@ -78,4 +88,5 @@ const staff = async (doctorId) => {
 };
 
 exports.doctor = doctor;
+exports.category = category;
 exports.staff = staff;

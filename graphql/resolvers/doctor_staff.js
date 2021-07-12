@@ -9,7 +9,10 @@ const Staff = require("../../models/staff");
 const User = require("../../models/user");
 const Admin = require("../../models/admin");
 const Attendence = require("../../models/attendence");
+const Appoinment = require("../../models/appoinment");
 const CovidAppoinment = require("../../models/covidappoinment");
+const Feedback = require("../../models/feedback");
+const HelpSupport = require("../../models/help_support");
 
 const doctor = require("./merge");
 
@@ -414,6 +417,149 @@ module.exports = {
       });
     } catch (err) {
       console.log(err);
+    }
+  },
+
+  review: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+
+    if (req.userType === "DOCTOR" || req.userType === "STAFF") {
+      try {
+        var doctorId = req.userId;
+        if (req.userType === "STAFF") {
+          const findStaff = await Staff.findOne({ _id: req.userId });
+          doctorId = findStaff.doctor;
+        }
+        const review = await Appoinment.find({ doctor: doctorId });
+        return review.map((onereview) => {
+          if (onereview._doc.appoinmentType === "COVID") {
+            return {
+              ...onereview._doc,
+              _id: onereview.id,
+            };
+          } else {
+            return {
+              ...onereview._doc,
+              _id: onereview.id,
+            };
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    if (req.userType === "USER") {
+      try {
+        const review = await Appoinment.find({ user: req.userId });
+        return review.map((onereview) => {
+          return {
+            ...onereview._doc,
+            _id: onereview.id,
+          };
+        });
+      } catch (err) {
+        throw new Error("Something went wrong , Please try again later!");
+      }
+    }
+  },
+
+  feedback: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+
+    if (req.userType === "STAFF") {
+      try {
+        const feedback = new Feedback({
+          staff: req.userId,
+          givenBy: req.userType,
+          feedbackText: args.feedback,
+          rating: args.rating,
+        });
+        await feedback.save();
+        return true;
+      } catch (err) {
+        throw new Error("Something went wrong , Please try again later!");
+      }
+    }
+    if (req.userType === "DOCTOR") {
+      try {
+        const feedback = new Feedback({
+          doctor: req.userId,
+          givenBy: req.userType,
+          feedbackText: args.feedback,
+          rating: args.rating,
+        });
+        await feedback.save();
+        return true;
+      } catch (err) {
+        throw new Error("Something went wrong , Please try again later!");
+      }
+    }
+    if (req.userType === "USER") {
+      try {
+        const feedback = new Feedback({
+          user: req.userId,
+          givenBy: req.userType,
+          feedbackText: args.feedback,
+          rating: args.rating,
+        });
+        await feedback.save();
+        return true;
+      } catch (err) {
+        throw new Error("Something went wrong , Please try again later!");
+      }
+    }
+  },
+
+  helpAndSupport: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+
+    if (req.userType === "DOCTOR" || req.userType === "STAFF") {
+      try {
+        const helps = await HelpSupport.find({ user: "DOCTOR" });
+        return helps.map((help) => {
+          return {
+            ...help._doc,
+            _id: help.id,
+          };
+        });
+      } catch (err) {
+        throw new Error("Something went wrong , Please try again later!");
+      }
+    }
+
+    if (req.userType === "USER") {
+      try {
+        const helps = await HelpSupport.find({ user: "USER" });
+        return helps.map((help) => {
+          return {
+            ...help._doc,
+            _id: help.id,
+          };
+        });
+      } catch (err) {
+        throw new Error("Something went wrong , Please try again later!");
+      }
+    }
+
+    if (req.userType === "ADMIN") {
+      try {
+        const helps = await HelpSupport.find();
+        return helps.map((help) => {
+          return {
+            ...help._doc,
+            _id: help.id,
+          };
+        });
+      } catch (err) {
+        throw new Error("Something went wrong , Please try again later!");
+      }
     }
   },
 };

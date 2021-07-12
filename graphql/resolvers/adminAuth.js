@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const Admin = require("../../models/admin");
 const Category = require("../../models/category");
+const Feedback = require("../../models/feedback");
+const HelpSupport = require("../../models/help_support");
 
 module.exports = {
   adminlogin: async ({ username, password }) => {
@@ -24,7 +26,7 @@ module.exports = {
     return {
       userId: admin.id,
       token: token,
-      userType: "ADMIN"
+      userType: "ADMIN",
     };
   },
   adminProfile: async (args, req) => {
@@ -95,6 +97,7 @@ module.exports = {
       throw err;
     }
   },
+
   createCategory: async (args, req) => {
     if (!req.isAuth) {
       throw new Error("You are not Authenticated!");
@@ -132,6 +135,79 @@ module.exports = {
       });
     } catch (err) {
       console.log(err);
+    }
+  },
+
+  createHelp: async (args, req) => {
+    if (!req.isAuth && req.userType === "ADMIN") {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+    try {
+      const help = new HelpSupport({
+        admin: req.userId,
+        user: args.userType,
+        question: args.question,
+        answer: args.answer,
+      });
+      const result = await help.save();
+
+      return { ...result._doc, _id: result.id };
+    } catch (err) {
+      throw err;
+    }
+  },
+  updateHelp: async (args, req) => {
+    if (!req.isAuth && req.userType === "ADMIN") {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+
+    try {
+      const result = await HelpSupport.findOneAndUpdate(
+        { _id: args.helpId },
+        {
+          user: args.userType,
+          question: args.question,
+          answer: args.answer,
+        },
+        {
+          omitUndefined: true,
+          new: true,
+        }
+      );
+
+      return { ...result._doc, _id: result.id };
+    } catch (err) {
+      throw err;
+    }
+  },
+  deleteHelp: async (args, req) => {
+    if (!req.isAuth && req.userType === "ADMIN") {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+
+    try {
+      await HelpSupport.findByIdAndDelete({ _id: args.helpId });
+
+      return true;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  viewFeedback: async (req) => {
+    if (!req.isAuth && req.userType === "ADMIN") {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+    try {
+      const helps = await Feedback.find();
+      return helps.map((help) => {
+        return {
+          ...help._doc,
+          _id: help.id,
+        };
+      });
+    } catch (err) {
+      throw new Error("Something went wrong , Please try again later!");
     }
   },
 };

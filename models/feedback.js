@@ -2,29 +2,25 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const reviewSchema = new Schema(
+const feedbackSchema = new Schema(
   {
     doctor: {
       type: Schema.Types.ObjectId,
       ref: "Doctor",
     },
+    staff: {
+      type: Schema.Types.ObjectId,
+      ref: "Staff",
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    appoinment: {
-      type: Schema.Types.ObjectId,
-      ref: "Appoinment",
-    },
-    covidappoinment: {
-      type: Schema.Types.ObjectId,
-      ref: "Appoinment",
-    },
-    appoinmentType: {
+    givenBy: {
       type: String,
       required: true,
     },
-    text: {
+    feedbackText: {
       type: String,
       required: true,
     },
@@ -32,7 +28,7 @@ const reviewSchema = new Schema(
       type: Number,
     },
   },
-  { timestamps: true }
+  { timestamp: true }
 );
 
-module.exports = mongoose.model("Review", reviewSchema);
+module.exports = mongoose.model("Feedback", feedbackSchema);
