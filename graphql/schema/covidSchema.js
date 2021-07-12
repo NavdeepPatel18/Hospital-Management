@@ -7,15 +7,28 @@ type CovidCenter{
   vacantbed:Int!
   icubed:Int!
 }
-type CovidBooking{
+type CovidAppoinment{
   _id: ID!
+  doctor: Doctor!
+  staff: Staff
   user: User!
   center: CovidCenter!
+  name: String!
+  age: Int
+  gender: String
+  phone: String!
+  address: String
+  token: Float!
   bedno: Int!
   oxygen: Boolean!
   ventilator: Boolean!
-  dateIn: String!
-  dateOut: String!
+  dateIn: String
+  dateOut: String
+  acceptedby: String!
+  appoinmentstatus: String!
+  status: String!
+  userstatus: String!
+  statusDate: String
 }
 input CovidCenterInput{
   totalbed: Int!
@@ -25,13 +38,20 @@ input CovidCenterInput{
   icubed:Int! 
 }
 
-input CovidBookingInput{
+input CovidAppoinmentInput{
+  doctor: String!
+  user: String!
   center: String!
+  name: String!
+  age: Int!
+  gender: String!
+  phone: String!
+  address: String!
   bedno: Int!
   oxygen: Boolean!
   ventilator: Boolean!
   dateIn: String!
-  dateOut: String
+  dateOut: String!
 }
 `;
 

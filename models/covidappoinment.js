@@ -2,12 +2,11 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const appoinmentSchema = new Schema(
+const covidAppoinmentSchema = new Schema(
   {
     doctor: {
       type: Schema.Types.ObjectId,
       ref: "Doctor",
-      required: true,
     },
     staff: {
       type: Schema.Types.ObjectId,
@@ -16,7 +15,10 @@ const appoinmentSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+    },
+    center: {
+      type: Schema.Types.ObjectId,
+      ref: "Covidcenter",
     },
     name: {
       type: String,
@@ -43,40 +45,24 @@ const appoinmentSchema = new Schema(
       required: true,
       unique: true,
     },
-    problem: {
-      type: String,
+    bedno: {
+      type: Number,
       required: true,
     },
-    bp: {
-      type: Number,
-      default: 0,
-    },
-    caseType: {
-      type: String,
+    oxygen: {
+      type: Boolean,
       required: true,
-      enum: {
-        values: ["Old", "New"],
-        message: "{VALUE} is not supported",
-      },
     },
-    suger: {
-      type: Number,
-      default: 0,
+    ventilator: {
+      type: Boolean,
+      required: true,
     },
-    allergy: {
-      type: String,
-      default: "NA",
-    },
-    history: {
-      type: String,
-      default: "NA",
-    },
-    date: {
+    dateIn: {
       type: Date,
       required: true,
     },
-    slot: {
-      type: String,
+    dateOut: {
+      type: Date,
       required: true,
     },
     acceptedby: {
@@ -95,10 +81,10 @@ const appoinmentSchema = new Schema(
     status: {
       type: String,
       enum: {
-        values: ["Pendding", "Visited", "Not Visited", "Cancle"],
+        values: ["Visited", "Not Visited", "Cancle"],
         message: "{VALUE} is not supported",
       },
-      default: "Pendding",
+      default: "Not Visited",
     },
     userstatus: {
       type: String,
@@ -115,4 +101,4 @@ const appoinmentSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Appoinment", appoinmentSchema);
+module.exports = mongoose.model("CovidAppoinment", covidAppoinmentSchema);

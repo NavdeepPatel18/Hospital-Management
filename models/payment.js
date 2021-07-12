@@ -10,6 +10,7 @@ const paymentSchema = new Schema({
   token: {
     type: String,
     required: true,
+    unique: true,
   },
   date: {
     type: Date,

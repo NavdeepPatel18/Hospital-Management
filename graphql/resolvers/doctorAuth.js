@@ -108,6 +108,8 @@ module.exports = {
         password: hashedPassword,
         category: args.doctorInput.category,
         status: "pendding",
+        createdAt: new Date().toISOString,
+        updatedAt: new Date().toISOString,
       });
 
       const doctorResult = await doctor.save();

@@ -1,10 +1,12 @@
 const Hospital = require("../../models/hospital");
 const HospitalPhoto = require("../../models/hospitalphoto");
 const Facilities = require("../../models/facilities");
+const Staff = require("../../models/staff");
+const Doctor = require("../../models/doctor");
+
 const { processRequest } = require("graphql-upload");
 const path = require("path");
 const fs = require("fs");
-const Staff = require("../../models/staff");
 
 function makeid(length) {
   var result = "";
@@ -38,8 +40,20 @@ module.exports = {
   },
 
   hospitalDetail: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+
+    if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
+      throw new Error("You do not have permission!");
+    }
     try {
-      const hospital = await Hospital.findOne({ doctor: args.userId });
+      var doctorId = req.userId;
+      if (req.userType === "STAFF") {
+        const findStaff = await Staff.findOne({ _id: req.userId });
+        doctorId = findStaff.doctor;
+      }
+      const hospital = await Hospital.findOne({ doctor: doctorId });
       return {
         ...hospital._doc,
         _id: hospital.id,

@@ -30,17 +30,22 @@ const schema = `
     categorys: [Category!]!
     doctor: Doctor!
     doctorProfile : Doctor!
+    
     doctorAppoinment:Appoinment!
     appoinmentHistory :Appoinment!
 
+    doctorCovidAppoinment:CovidAppoinment!
+    covidAppoinmentHistory :CovidAppoinment!
+
     
-    hospitalDetail(userId: String!) : Hospital!
+    hospitalDetail: Hospital!
     
     staffProfile(staffId:String) : Staff!
     staffs : [Staff!]
     
     userProfile : User!
     myAppoinment :Appoinment!
+    myCovidAppoinment :CovidAppoinment!
     
     adminlogin(username: String! , password: String! ): AdminAuthData!
     doctorlogin(username: String! , password: String! ): DoctorAuthData!
@@ -69,13 +74,15 @@ const schema = `
 
     attendence(status:String!): Attendence!
     
-    createCovidBooking(covidBookingInput: CovidBookingInput): CovidBooking!
-    
+    createCovidAppoinment(appoinmentInput: AppoinmentInput): Boolean!
+    cancleCovidAppoinment(appoinmentId:String!,status:String!):Boolean!
+    covidAppoinmentAccept(appoinmentId:String!,status:String!):Boolean!
+    covidAppoinmentVisit(appoinmentId:String!,status:String!):Boolean!
+
     createAppoinment(appoinmentInput: AppoinmentInput): Boolean!
     cancleAppoinment(appoinmentId:String!,status:String!):Boolean!
     appoinmentAccept(appoinmentId:String!,status:String!):Boolean!
     appoinmentVisit(appoinmentId:String!,status:String!):Boolean!
-    doctorAppoinment(appoinmentId:String!,status:String!):Boolean!
 
     createReview(reviewInput: ReviewInput): Review!
     createUser(userInput: UserInput): User!

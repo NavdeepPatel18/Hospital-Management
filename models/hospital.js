@@ -15,10 +15,12 @@ const hospitalSchema = new Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     number: {
       type: String,
       required: true,
+      unique: true,
     },
     location: {
       type: String,

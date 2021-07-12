@@ -11,10 +11,12 @@ const staffSchema = new Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     phone: {
       type: Number,
       required: true,
+      unique: true,
     },
     designation: {
       type: String,

@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Appoinment = require("../../models/appoinment");
 const User = require("../../models/user");
+const CovidAppoinment = require("../../models/covidappoinment");
 
 async function tokengenerator() {
   var token = [];
@@ -114,6 +115,11 @@ module.exports = {
       const appoinment = new Appoinment({
         doctor: args.appoinmentInput.doctor,
         user: find.id,
+        name: args.appoinmentInput.name,
+        age: args.appoinmentInput.age,
+        gender: args.appoinmentInput.gender,
+        phone: args.appoinmentInput.phone,
+        address: args.appoinmentInput.address,
         token: token,
         problem: args.appoinmentInput.problem,
         bp: args.appoinmentInput.bp,
@@ -150,6 +156,7 @@ module.exports = {
       throw new Error("Something went wrong , Please try again later!");
     }
   },
+
   myAppoinment: async (args, req) => {
     if (!req.isAuth && req.userType !== "USER") {
       throw new Error("You not have access");
@@ -162,6 +169,84 @@ module.exports = {
         return {
           ...appoinment._doc,
           _id: appoinment.id,
+          doctor: doctor.bind(this, appoinment.doctor),
+          createdAt: dateToString(appoinment._doc.createdAt),
+          updatedAt: dateToString(appoinment._doc.updatedAt),
+        };
+      });
+    } catch (err) {
+      throw new Error("Something went wrong , Please try again later!");
+    }
+  },
+
+  createCovidAppoinment: async (args, req) => {
+    if (!req.isAuth && req.userType !== "USER") {
+      throw new Error("You not have access");
+    }
+    const find = await User.findById({ _id: req.userId });
+    if (!find) {
+      throw new Error("Please try again");
+    }
+    try {
+      const token = await tokengenerator();
+      const covidappoinment = new CovidAppoinment({
+        doctor: args.appoinmentInput.doctor,
+        user: find.id,
+        center: args.appoinmentInput.center,
+        name: args.appoinmentInput.name,
+        age: args.appoinmentInput.age,
+        gender: args.appoinmentInput.gender,
+        phone: args.appoinmentInput.phone,
+        address: args.appoinmentInput.address,
+        token: token,
+        bedno: args.appoinmentInput.bedno,
+        oxygen: args.appoinmentInput.oxygen,
+        ventilator: args.appoinmentInput.ventilator,
+        dateIn: args.appoinmentInput.dateIn,
+        dateOut: args.appoinmentInput.dateOut,
+      });
+      await covidappoinment.save();
+      return true;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Something went wrong , Please try again later!");
+    }
+  },
+  cancleCovidAppoinment: async (args, req) => {
+    if (!req.isAuth && req.userType !== "USER") {
+      throw new Error("You not have access");
+    }
+    try {
+      await CovidAppoinment.findByIdAndUpdate(
+        { _id: args.appoinmentId },
+        { userstatus: args.status },
+        {
+          omitUndefined: true,
+          new: true,
+        }
+      );
+      return true;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Something went wrong , Please try again later!");
+    }
+  },
+
+  myCovidAppoinment: async (args, req) => {
+    if (!req.isAuth && req.userType !== "USER") {
+      throw new Error("You not have access");
+    }
+    try {
+      const covidappoinments = await CovidAppoinment.find({
+        user: req.userId,
+      });
+      return covidappoinments.map((appoinment) => {
+        return {
+          ...appoinment._doc,
+          _id: appoinment.id,
+          doctor: doctor.bind(this, appoinment.doctor),
+          createdAt: dateToString(appoinment._doc.createdAt),
+          updatedAt: dateToString(appoinment._doc.updatedAt),
         };
       });
     } catch (err) {

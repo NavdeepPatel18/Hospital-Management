@@ -1,3 +1,12 @@
+const Doctor = require("../../models/doctor");
+const Hospital = require("../../models/hospital");
+const HospitalPhoto = require("../../models/hospitalphoto");
+const Facilities = require("../../models/facilities");
+const CovidCenter = require("../../models/covidcenter");
+const Staff = require("../../models/staff");
+const User = require("../../models/user");
+const Admin = require("../../models/admin");
+
 const admin = async (staffId) => {
   try {
     const admin = await Admin.findById(staffId);
@@ -37,7 +46,7 @@ const hospital = async (hospitalId) => {
   }
 };
 
-const HospitalPhoto = async (hospitalId) => {
+const hospitalphoto = async (hospitalId) => {
   try {
     const hospitalPhotos = await HospitalPhoto.findById(hospitalId);
     return hospitalPhotos.map((hospitalPhoto) => {
@@ -48,7 +57,7 @@ const HospitalPhoto = async (hospitalId) => {
   }
 };
 
-const Faclities = async (hospitalId) => {
+const faclities = async (hospitalId) => {
   try {
     const facilities = await Faclities.findById(hospitalId);
     return { ...facilities._doc, _id: facilities.id };
@@ -57,7 +66,7 @@ const Faclities = async (hospitalId) => {
   }
 };
 
-const Staff = async (doctorId) => {
+const staff = async (doctorId) => {
   try {
     const staffs = await Staff.findById(doctorId);
     return staffs.map((staff) => {
@@ -67,3 +76,6 @@ const Staff = async (doctorId) => {
     throw err;
   }
 };
+
+exports.doctor = doctor;
+exports.staff = staff;
