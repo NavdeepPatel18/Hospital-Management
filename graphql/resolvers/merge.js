@@ -5,6 +5,9 @@ const CovidCenter = require("../../models/covidcenter");
 const Staff = require("../../models/staff");
 const User = require("../../models/user");
 const Admin = require("../../models/admin");
+const Review = require("../../models/review");
+const Appoinment = require("../../models/appoinment");
+const CovidAppoinment = require("../../models/covidappoinment");
 
 const admin = async (adminId) => {
   try {
@@ -27,7 +30,7 @@ const category = async (categoryId) => {
   }
 };
 
-const doctor = async (staffId) => {
+const singledoctor = async (staffId) => {
   try {
     const doctor = await Doctor.findById(staffId);
     return { ...doctor._doc, _id: doctor.id, password: null };
@@ -36,7 +39,16 @@ const doctor = async (staffId) => {
   }
 };
 
-const user = async (userId) => {
+const staff = async (doctorId) => {
+  try {
+    const staff = await Staff.findById(doctorId);
+    return { ...staff._doc, _id: staff.id, password: null };
+  } catch (err) {
+    throw err;
+  }
+};
+
+const singleuser = async (userId) => {
   try {
     const user = await User.findById(userId);
     return { ...user._doc, _id: user.id, password: null };
@@ -54,19 +66,49 @@ const hospital = async (hospitalId) => {
   }
 };
 
-const staff = async (doctorId) => {
+const covidcenter = async (covidcenterId) => {
   try {
-    const staffs = await Staff.findById(doctorId);
-    return staffs.map((staff) => {
-      return { ...staff._doc, _id: staff.id, password: null };
-    });
+    const covidcenters = await CovidCenter.findById(covidcenterId);
+    return { ...covidcenters._doc, _id: covidcenters.id };
   } catch (err) {
     throw err;
   }
 };
 
-exports.doctor = doctor;
-exports.user = user;
-exports.category = category;
+const review = async (reviewId) => {
+  try {
+    const reviews = await Review.findById(reviewId);
+    return { ...reviews._doc, _id: reviews.id };
+  } catch (err) {
+    throw err;
+  }
+};
+
+const singleappoinment = async (appoinmentId) => {
+  try {
+    const appoinments = await Appoinment.findById(appoinmentId);
+    return { ...appoinments._doc, _id: appoinments.id };
+  } catch (err) {
+    throw err;
+  }
+};
+
+const singlecovidappoinment = async (covidappoinmentId) => {
+  try {
+    const covidappoinments = await CovidAppoinment.findById(covidappoinmentId);
+    return { ...covidappoinments._doc, _id: covidappoinments.id };
+  } catch (err) {
+    throw err;
+  }
+};
+
 exports.admin = admin;
+exports.category = category;
+exports.singledoctor = singledoctor;
+exports.staff = staff;
+exports.singleuser = singleuser;
 exports.hospital = hospital;
+exports.covidcenter = covidcenter;
+exports.review = review;
+exports.singleappoinment = singleappoinment;
+exports.singlecovidappoinment = singlecovidappoinment;

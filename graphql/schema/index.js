@@ -80,6 +80,8 @@ const schema = `
     createAdvertismentPhoto(advertismentPhotoInput: AdvertismentPhotoInput): AdvertismentPhoto!
     
     changePassword(oldpassword: String! , newpassword: String!):Boolean!
+    forgotPassword(phone: String! , newpassword: String!):Boolean!
+
     
     createDoctor(doctorInput: DoctorInput): Doctor!
     createStaff(staffInput: StaffInput): Staff!

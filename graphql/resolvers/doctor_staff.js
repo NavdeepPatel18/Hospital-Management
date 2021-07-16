@@ -1,22 +1,22 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Doctor = require("../../models/doctor");
-const Hospital = require("../../models/hospital");
-const HospitalPhoto = require("../../models/hospitalphoto");
-const Facilities = require("../../models/facilities");
-const CovidCenter = require("../../models/covidcenter");
 const Staff = require("../../models/staff");
-const User = require("../../models/user");
-const Admin = require("../../models/admin");
 const Attendence = require("../../models/attendence");
 const Appoinment = require("../../models/appoinment");
 const CovidAppoinment = require("../../models/covidappoinment");
+const Review = require("../../models/review");
 const Feedback = require("../../models/feedback");
 const HelpSupport = require("../../models/help_support");
 
 const { dateToString } = require("../../helpers/date");
 
-const { doctor, user } = require("./merge");
+const {
+  singledoctor,
+  singleuser,
+  singlecovidappoinment,
+  singleappoinment,
+} = require("./merge");
 
 var start = new Date();
 start.setHours(0, 0, 0, 0);
@@ -248,8 +248,8 @@ module.exports = {
         return {
           ...history._doc,
           _id: history.id,
-          doctor: doctor.bind(this, history.doctor),
-          user: user.bind(this, history.user),
+          doctor: singledoctor.bind(this, history.doctor),
+          user: singleuser.bind(this, history.user),
           createdAt: dateToString(history._doc.createdAt),
           updatedAt: dateToString(history._doc.updatedAt),
         };
@@ -311,8 +311,8 @@ module.exports = {
         return {
           ...history._doc,
           _id: history.id,
-          doctor: doctor.bind(this, history.doctor),
-          user: user.bind(this, history.user),
+          doctor: singledoctor.bind(this, history.doctor),
+          user: singleuser.bind(this, history.user),
           createdAt: dateToString(history._doc.createdAt),
           updatedAt: dateToString(history._doc.updatedAt),
         };
@@ -375,8 +375,8 @@ module.exports = {
         return {
           ...history._doc,
           _id: history.id,
-          doctor: doctor.bind(this, history.doctor),
-          user: user.bind(this, history.user),
+          doctor: singledoctor.bind(this, history.doctor),
+          user: singleuser.bind(this, history.user),
           createdAt: dateToString(history._doc.createdAt),
           updatedAt: dateToString(history._doc.updatedAt),
         };
@@ -441,7 +441,7 @@ module.exports = {
         return {
           ...history._doc,
           _id: history.id,
-          doctor: doctor.bind(this, history.doctor),
+          doctor: singledoctor.bind(this, history.doctor),
           createdAt: dateToString(history._doc.createdAt),
           updatedAt: dateToString(history._doc.updatedAt),
         };
@@ -504,7 +504,7 @@ module.exports = {
         return {
           ...history._doc,
           _id: history.id,
-          doctor: doctor.bind(this, history.doctor),
+          doctor: singledoctordoctor.bind(this, history.doctor),
           createdAt: dateToString(history._doc.createdAt),
           updatedAt: dateToString(history._doc.updatedAt),
         };
@@ -526,17 +526,26 @@ module.exports = {
           const findStaff = await Staff.findOne({ _id: req.userId });
           doctorId = findStaff.doctor;
         }
-        const review = await Appoinment.find({ doctor: doctorId });
+        const review = await Review.find({ doctor: doctorId });
         return review.map((onereview) => {
           if (onereview._doc.appoinmentType === "COVID") {
             return {
               ...onereview._doc,
               _id: onereview.id,
+              doctor: singledoctor.bind(this, onereview.doctor),
+              user: singleuser.bind(this, onereview.user),
+              covidappoinment: singlecovidappoinment.bind(
+                this,
+                onereview.covidappoinment
+              ),
             };
           } else {
             return {
               ...onereview._doc,
               _id: onereview.id,
+              doctor: singledoctor.bind(this, onereview.doctor),
+              user: singleuser.bind(this, onereview.user),
+              appoinment: singleappoinment.bind(this, onereview.appoinment),
             };
           }
         });
@@ -547,12 +556,26 @@ module.exports = {
 
     if (req.userType === "USER") {
       try {
-        const review = await Appoinment.find({ user: req.userId });
+        const review = await Review.find({ user: req.userId });
         return review.map((onereview) => {
-          return {
-            ...onereview._doc,
-            _id: onereview.id,
-          };
+          if (onereview._doc.appoinmentType === "COVID") {
+            return {
+              ...onereview._doc,
+              _id: onereview.id,
+              doctor: singledoctor.bind(this, onereview.doctor),
+              covidappoinment: singlecovidappoinment.bind(
+                this,
+                onereview.covidappoinment
+              ),
+            };
+          } else {
+            return {
+              ...onereview._doc,
+              _id: onereview.id,
+              doctor: singledoctor.bind(this, onereview.doctor),
+              appoinment: singleappoinment.bind(this, onereview.appoinment),
+            };
+          }
         });
       } catch (err) {
         throw new Error("Something went wrong , Please try again later!");

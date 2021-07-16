@@ -135,4 +135,52 @@ module.exports = {
       throw new Error("Some thing went wrong!");
     }
   },
+  forgotPassword: async (args, req) => {
+    const doctor = await Doctor.findOne({ phone: args.phone });
+    const staff = await Staff.findOne({ phone: args.phone });
+    const user = await User.findOne({ phone: args.phone });
+
+    if (doctor) {
+      try {
+        const hashedPassword = await bcrypt.hash(args.newpassword, 12);
+
+        await Doctor.findOneAndUpdate(
+          { _id: doctor.id },
+          { password: hashedPassword }
+        );
+
+        return true;
+      } catch (err) {
+        throw err;
+      }
+    } else if (staff) {
+      try {
+        const hashedPassword = await bcrypt.hash(args.newpassword, 12);
+
+        await Staff.findOneAndUpdate(
+          { _id: staff.id },
+          { password: hashedPassword }
+        );
+
+        return true;
+      } catch (err) {
+        throw err;
+      }
+    } else if (user) {
+      try {
+        const hashedPassword = await bcrypt.hash(args.newpassword, 12);
+
+        await User.findOneAndUpdate(
+          { _id: user.id },
+          { password: hashedPassword }
+        );
+
+        return true;
+      } catch (err) {
+        throw err;
+      }
+    } else {
+      throw new Error("Some thing went wrong!");
+    }
+  },
 };
