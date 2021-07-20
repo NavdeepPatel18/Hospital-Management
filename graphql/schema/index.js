@@ -12,6 +12,7 @@ const { staffType } = require("./staffSchema");
 const { userType } = require("./userSchema");
 const { feedbackType } = require("./feedbackSchema");
 const { helpType } = require("./helpSchema");
+const { notificationType } = require("./notificationSchema");
 
 const schema = `
 
@@ -27,6 +28,8 @@ const schema = `
   ${reviewType}
   ${feedbackType}
   ${helpType}
+  ${notificationType}
+
 
   type RootQuery {
     adminProfile : Admin!
@@ -59,6 +62,8 @@ const schema = `
     userProfile : User!
     myAppoinment :[Appoinment!]
     myCovidAppoinment :[CovidAppoinment!]
+
+    notification : [Notification!]
     
     adminlogin(username: String! , password: String! ): AdminAuthData!
     doctorlogin(username: String! , password: String! ): DoctorAuthData!
