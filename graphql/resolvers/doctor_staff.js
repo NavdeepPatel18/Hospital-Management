@@ -306,6 +306,7 @@ module.exports = {
       const historys = await Appoinment.find({
         doctor: doctorId,
         appoinmentstatus: "Accept",
+        status: "Pendding",
       });
       return historys.map((history) => {
         return {
