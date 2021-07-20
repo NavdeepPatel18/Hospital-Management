@@ -387,6 +387,39 @@ module.exports = {
     }
   },
 
+  newCovidAppoinment: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error({ status: "error", error: "You not have access" });
+    }
+
+    if (req.userType !== "DOCTOR" && req.userType !== "STAFF") {
+      throw new Error("You do not have permission!");
+    }
+
+    try {
+      const doctorId = req.userId;
+      if (req.userType === "STAFF") {
+        const findStaff = await Staff.findOne({ _id: req.userId });
+        doctoreId = findStaff.doctor;
+      }
+      const historys = await CovidAppoinment.find({
+        doctor: doctorId,
+        appoinmentstatus: "Pendding",
+      });
+      return historys.map((history) => {
+        return {
+          ...history._doc,
+          _id: history.id,
+          doctor: singledoctor.bind(this, history.doctor),
+          user: singleuser.bind(this, history.user),
+          createdAt: dateToString(history._doc.createdAt),
+          updatedAt: dateToString(history._doc.updatedAt),
+        };
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
   covidAppoinmentAccept: async (args, req) => {
     if (!req.isAuth) {
       throw new Error({ status: "error", error: "You not have access" });
@@ -436,7 +469,8 @@ module.exports = {
       }
       const historys = await CovidAppoinment.find({
         doctor: doctorId,
-        status: "Accept",
+        appoinmentstatus: "Accept",
+        status: "Pendding",
       });
       return historys.map((history) => {
         return {

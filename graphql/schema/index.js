@@ -45,6 +45,7 @@ const schema = `
     doctorAppoinment:[Appoinment!]
     appoinmentHistory :[Appoinment!]
 
+    newCovidAppoinment:[CovidAppoinment!]
     doctorCovidAppoinment:[CovidAppoinment!]
     covidAppoinmentHistory :[CovidAppoinment!]
 
@@ -101,7 +102,7 @@ const schema = `
 
     attendence(status:String!): Attendence!
     
-    createCovidAppoinment(appoinmentInput: AppoinmentInput): Boolean!
+    createCovidAppoinment(appoinmentInput: CovidAppoinmentInput): Boolean!
     cancleCovidAppoinment(appoinmentId:String!,status:String!):Boolean!
     covidAppoinmentAccept(appoinmentId:String!,status:String!):Boolean!
     covidAppoinmentVisit(appoinmentId:String!,status:String!):Boolean!
