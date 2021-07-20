@@ -451,7 +451,7 @@ module.exports = {
       console.log(err);
     }
   },
-  coviAppoinmentVisit: async (args, req) => {
+  covidAppoinmentVisit: async (args, req) => {
     if (!req.isAuth) {
       throw new Error({ status: "error", error: "You not have access" });
     }
