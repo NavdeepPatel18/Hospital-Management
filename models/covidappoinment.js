@@ -81,10 +81,10 @@ const covidAppoinmentSchema = new Schema(
     status: {
       type: String,
       enum: {
-        values: ["Visited", "Not Visited", "Cancle"],
+        values: ["Pendding","Visited", "Not Visited", "Cancle"],
         message: "{VALUE} is not supported",
       },
-      default: "Not Visited",
+      default: "Pendding",
     },
     userstatus: {
       type: String,

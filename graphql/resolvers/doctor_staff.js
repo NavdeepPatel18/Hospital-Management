@@ -440,7 +440,7 @@ module.exports = {
       }
       await CovidAppoinment.findByIdAndUpdate(
         { _id: args.appoinmentId },
-        { data },
+        data,
         {
           omitUndefined: true,
           new: true,
@@ -523,7 +523,7 @@ module.exports = {
         const findStaff = await Staff.findOne({ _id: req.userId });
         doctoreId = findStaff.doctor;
       }
-      const historys = await Appoinment.find({
+      const historys = await CovidAppoinment.find({
         doctor: doctorId,
         $or: [
           {
@@ -532,14 +532,14 @@ module.exports = {
               { status: { $ne: "Pendding" } },
             ],
           },
-          { $or: { appoinmentstatus: "Reject" } },
+          { appoinmentstatus: "Reject" },
         ],
       });
       return historys.map((history) => {
         return {
           ...history._doc,
           _id: history.id,
-          doctor: singledoctordoctor.bind(this, history.doctor),
+          doctor: singledoctor.bind(this, history.doctor),
           createdAt: dateToString(history._doc.createdAt),
           updatedAt: dateToString(history._doc.updatedAt),
         };
